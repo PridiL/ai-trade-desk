@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Trade Desk</title><style>
+:root{color-scheme:light;--bg:#f4f4f2;--card:#fff;--ink:#15181b;--ink2:#4d555d;--muted:#7d858d;--line:#e2e5e8;
+--accent:#2a78d6;--long:#0f8a4f;--longbg:#e4f5ec;--short:#c4372f;--shortbg:#fbe8e6;--neu:#8b939b;--warn:#b86e00;--chip:#eef0f2}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0d0f11;--card:#15181b;--ink:#f2f4f6;
+--ink2:#c2c8ce;--muted:#858d95;--line:#272c31;--accent:#4d94e8;--long:#3ddc97;--longbg:#10291d;--short:#ff6b6b;--shortbg:#2d1414;
+--neu:#858d95;--warn:#f0a83c;--chip:#1f2328}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0d0f11;--card:#15181b;--ink:#f2f4f6;--ink2:#c2c8ce;--muted:#858d95;--line:#272c31;
+--accent:#4d94e8;--long:#3ddc97;--longbg:#10291d;--short:#ff6b6b;--shortbg:#2d1414;--neu:#858d95;--warn:#f0a83c;--chip:#1f2328}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:400 14px/1.5 -apple-system,"Segoe UI",Roboto,system-ui,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:18px 16px 48px}
+header.top{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;margin-bottom:14px}
+h1{font-size:20px;margin:0;letter-spacing:-.2px}.meta{color:var(--muted);font-size:12.5px}
+.headline{font-size:17px;font-weight:600;margin:6px 0 4px}.summary{color:var(--ink2);margin:0 0 18px;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card h2{display:flex;align-items:center;gap:10px;font-size:18px;margin:0 0 6px}
+.rank{color:var(--muted);font-size:13px;font-weight:500}
+.dir{font-size:12px;font-weight:700;padding:2px 9px;border-radius:5px;letter-spacing:.4px}
+.LONG{color:var(--long);background:var(--longbg)}.SHORT{color:var(--short);background:var(--shortbg)}
+.conv{margin-left:auto;color:var(--muted);font-size:12px;white-space:nowrap}.conv b{color:var(--accent);letter-spacing:2px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+.lv td,.lv th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right;font-size:13px}
+.lv th{color:var(--muted);font-weight:500}.lv td:first-child,.lv th:first-child{text-align:left}
+.best{font-weight:700}.views{margin:8px 0;padding:0;list-style:none;font-size:13px}.views li{margin:3px 0}
+.views b{display:inline-block;width:28px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}.chip{font-size:11.5px;padding:2px 8px;border-radius:10px;background:var(--chip);color:var(--ink2)}
+.chip.for{color:var(--long)}.chip.against{color:var(--short)}
+.card p{margin:6px 0}.small{font-size:12.5px;color:var(--ink2)}.card ul{margin:4px 0 6px;padding-left:18px;font-size:12.5px;color:var(--ink2)}
+.live{font-size:12px;color:var(--muted);margin-top:6px}
+section{margin-top:26px}section>h3{font-size:15px;margin:0 0 10px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tab{font:inherit;font-size:13px;padding:6px 12px;border-radius:7px;border:1px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.pane[hidden]{display:none}.pane h4,.pane h5,.pane h6{margin:14px 0 4px;font-size:14px}
+.round{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:4px 0 2px}
+.pane .tw{overflow-x:auto}.pane table td,.pane table th{border:1px solid var(--line);padding:3px 6px;font-size:12.5px}
+details.raw summary{cursor:pointer;color:var(--muted);font-size:12px}details.raw pre{white-space:pre-wrap;font-size:11.5px;background:var(--chip);padding:8px;border-radius:6px}
+.hist{overflow-x:auto}.hist table td,.hist table th{padding:5px 7px;border-bottom:1px solid var(--line);font-size:12.5px;text-align:right;white-space:nowrap}
+.hist table td:nth-child(-n+3),.hist table th:nth-child(-n+3){text-align:left}.rv td.note{white-space:normal;text-align:left;min-width:220px}.pos{color:var(--long)}.neg{color:var(--short)}.mut{color:var(--muted)}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}.stat{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;min-width:150px}
+.stat b{display:block;font-size:17px}.stat span{font-size:12px;color:var(--muted)}
+.disc{margin-top:30px;color:var(--muted);font-size:12px}a{color:var(--accent)}
+@media (max-width:560px){.cards{grid-template-columns:1fr}.conv{margin-left:0}}
+</style></head><body><div class="wrap">
+<p class="small"><a href="../">← latest call</a></p><header class="top"><h1>AI Trade Desk</h1>
+<span class="meta">4H bar closed Thu 19 Nov 2026 13:00 Bangkok · next update ≈ Thu 19 Nov 17:00 · 28 FX pairs + 9 indices ("Pridi Forex" watchlist) · <a href="https://pridil.github.io/rvwap-signals/">Rolling VWAP signals →</a></span></header>
+<div class="headline">Sell AUD after the jobs miss (EURAUD and GBPAUD long) and buy USDCAD on dips; avoid chasing oversold AUD and USD-major lows.</div>
+<p class="summary">USD is the dominant daily trend (DXY RSI 77, USD Leading on the daily RRG) but is cooling intraday, and most USD majors are oversold on 4H with bullish divergences. Risk tone is off: VIX near 25 and equity indices deeply oversold, with JPY bid against everything except USD. AUD is the weakest currency after Oct jobs printed -43.5K vs +25K, and Technical, Flow and Macro agree on expressing it through EUR and GBP crosses rather than chasing AUDUSD at RSI 23. COT warns that AUD shorts and JPY/CHF longs are already crowded, so entries are on pullbacks.</p>
+<div class="cards"><article class="card">
+<h2><span class="rank">#1</span>EURAUD<span class="dir LONG">LONG</span>
+<span class="conv">conviction <b>●●●●○</b></span></h2>
+<p class="small">EUR is improving on the 4H RRG while AUD is lagging on both timeframes after a big jobs miss. The pair broke its 20-bar high with a bullish SMA stack and a daily uptrend, and retail is only 33.6% long with shorts 285 pips under water.</p>
+<table class="lv"><thead><tr><th></th><th>Price</th><th>Distance</th><th>R:R</th></tr></thead><tbody><tr><td>Entry (market)</td><td>1.63946</td><td></td><td></td></tr><tr><td>Stop</td><td>1.63250</td><td>70 pips</td><td></td></tr><tr><td>Target 1d</td><td>1.64600</td><td>65 pips</td><td>0.9R</td></tr><tr class="best"><td>Target 3d ★</td><td>1.65050</td><td>110 pips</td><td>1.6R</td></tr><tr><td>Target 5d</td><td>1.65350</td><td>140 pips</td><td>2.0R</td></tr></tbody></table>
+<ul class="views"><li><b>1d</b>Retest of the 1.64566 breakout high after the rejection bar; GBP/EUR events not until Mon.</li><li><b>3d</b>Best horizon: AUD weakness and EUR spread widening (+20.1bp 4w) carry it about 0.6 sigma higher.</li><li><b>5d</b>Still favoured, but Wed 07:30 AUD CPI can reverse AUD; trim before it.</li></ul>
+<div class="chips"><span class="chip for">Tech: for</span><span class="chip neutral">COT: neutral</span><span class="chip for">Flow: for</span><span class="chip for">Macro: for</span></div>
+<ul><li>Tech: broke 20-bar high, price &gt; SMA20 1.63321 &gt; SMA200 1.60902, daily trend up</li><li>COT: AUD composite 0 (crowded short) vs EUR unwinding - direction fits, crowding caps it</li><li>Flow: RRG Leading on 4H and Daily, retail 33.6% long, week z +0.52</li><li>Macro: AUD jobs -43.5K vs +25K, EURAUD 2y spread +20.1bp 4w</li></ul>
+<p class="small"><b>Risks:</b></p><ul><li>Crowded AUD short (COT composite 0) can squeeze</li><li>Mon 15:30 EUR PMI flash and Tue 16:00 Ifo</li></ul>
+<p class="small"><b>Event risk:</b> Mon 15:30 BKK EUR Manufacturing PMI flash (HIGH), Tue 16:00 BKK EUR Ifo (HIGH), Wed 07:30 BKK AUD CPI<br><b>Invalidation:</b> 4H close below 1.6325 (back under SMA20 / weekly VWAP)</p>
+</article><article class="card">
+<h2><span class="rank">#2</span>USDCAD<span class="dir LONG">LONG</span>
+<span class="conv">conviction <b>●●●○○</b></span></h2>
+<p class="small">Daily RRG Leading with a widening USD-CAD 2y spread (+33.8bp 13w) and retail only 18.9% long with shorts deep under water. The 4H is overbought with a shooting star, so the desk buys a dip to the SMA20 zone rather than chasing.</p>
+<table class="lv"><thead><tr><th></th><th>Price</th><th>Distance</th><th>R:R</th></tr></thead><tbody><tr><td>Entry (limit)</td><td>1.43200</td><td></td><td></td></tr><tr><td>Stop</td><td>1.42830</td><td>37 pips</td><td></td></tr><tr><td>Target 1d</td><td>1.43600</td><td>40 pips</td><td>1.1R</td></tr><tr class="best"><td>Target 3d ★</td><td>1.43850</td><td>65 pips</td><td>1.8R</td></tr><tr><td>Target 5d</td><td>1.44050</td><td>85 pips</td><td>2.3R</td></tr></tbody></table>
+<ul class="views"><li><b>1d</b>Pullback toward SMA20/weekly VWAP first after the 4H shooting star; buy the dip into US claims.</li><li><b>3d</b>Best horizon: daily uptrend and a widening 2y spread resume after the dip.</li><li><b>5d</b>Up-trend extension toward 1.44, but Fri CAD retail sales and Mon US PMIs add noise.</li></ul>
+<div class="chips"><span class="chip neutral">Tech: neutral</span><span class="chip for">COT: for</span><span class="chip for">Flow: for</span><span class="chip for">Macro: for</span></div>
+<ul><li>Tech: daily uptrend, price &gt; SMA20 1.43043 &gt; SMA200 1.41396, but RSI 72.2 and bearish divergences</li><li>COT: USD 78 and CAD 75, no crowding on either leg</li><li>Flow: retail 18.9% long (MyFxBook 8%), shorts -208.5 pips, daily RRG Leading</li><li>Macro: 2y spread 1.505%, +9.2bp 4w, +33.8bp 13w</li></ul>
+<p class="small"><b>Risks:</b></p><ul><li>4H shooting star with regular bearish RSI/MACD divergences - dip may run deeper</li><li>USD cooling intraday on the 4H RRG</li></ul>
+<p class="small"><b>Event risk:</b> Thu 20:30 BKK USD Initial Jobless Claims / Philly Fed, Fri 20:30 BKK CAD Retail Sales<br><b>Invalidation:</b> 4H close below 1.4283 (below prior day low 1.42883)</p>
+</article><article class="card">
+<h2><span class="rank">#3</span>GBPAUD<span class="dir LONG">LONG</span>
+<span class="conv">conviction <b>●●●○○</b></span></h2>
+<p class="small">Same AUD-weakness theme as idea 1 through a GBP leg that COT shows rebuilding (composite 76 from 45). Daily uptrend and a bullish 4H stack; the last bar rejected the breakout, so the entry is a limit at the SMA20 / weekly VWAP zone. This is the second AUD-short on the sheet; size both together as one theme.</p>
+<table class="lv"><thead><tr><th></th><th>Price</th><th>Distance</th><th>R:R</th></tr></thead><tbody><tr><td>Entry (limit)</td><td>1.95900</td><td></td><td></td></tr><tr><td>Stop</td><td>1.94850</td><td>105 pips</td><td></td></tr><tr><td>Target 1d</td><td>1.96700</td><td>80 pips</td><td>0.8R</td></tr><tr class="best"><td>Target 3d ★</td><td>1.97100</td><td>120 pips</td><td>1.1R</td></tr><tr><td>Target 5d</td><td>1.97400</td><td>150 pips</td><td>1.4R</td></tr></tbody></table>
+<ul class="views"><li><b>1d</b>Wait for the dip to SMA20/weekly VWAP; GBP retail sales Fri 14:00 is the swing factor.</li><li><b>3d</b>Best horizon: retest of the 1.97104 breakout high on AUD weakness.</li><li><b>5d</b>Extension possible, but GBP PMIs Mon and AUD CPI Wed make it two-way.</li></ul>
+<div class="chips"><span class="chip for">Tech: for</span><span class="chip for">COT: for</span><span class="chip neutral">Flow: neutral</span><span class="chip for">Macro: for</span></div>
+<ul><li>Tech: price &gt; SMA20 1.95863 &gt; SMA200 1.91758, daily RSI 70.7, rejection bar after 20-bar-high break</li><li>COT: GBP composite 76 rising vs AUD composite 0</li><li>Flow: retail 26.8% long, but GBP lagging on 4H RRG</li><li>Macro: AUD jobs miss; GBP 2y -6.9bp 1w is a mild drag</li></ul>
+<p class="small"><b>Risks:</b></p><ul><li>Two AUD-short ideas on the sheet (EURAUD and GBPAUD) - correlated</li><li>Developing bearish divergences on 4H; GBP lagging intraday</li></ul>
+<p class="small"><b>Event risk:</b> Fri 14:00 BKK GBP Retail Sales (HIGH), Mon 16:30 BKK GBP PMIs flash (HIGH), Wed 07:30 BKK AUD CPI<br><b>Invalidation:</b> 4H close below 1.9485 (below 20-bar low 1.94876)</p>
+</article></div>
+<section><h3>Desk notes</h3><div class="box">
+<p><b>Dissent:</b> COT argues the AUD short and JPY long are both crowded extremes and favours contrarian JPY-cross longs; Technical, Flow and Macro say the risk-off tape and AUD data still favour the trend, so the desk only buys AUD-short exposure on pullbacks.</p>
+<p class="small"><b>Also considered:</b></p><ul class="small"><li><b>GBPUSD SHORT</b> - Tech and Flow for, but RSI 27 with bullish divergences and GBP retail sales Fri; would add a second long-USD idea.</li><li><b>AUDJPY SHORT</b> - Flow and Macro for, Tech and COT against: AUD crowded short, RSI 30.6, JPY CPI Fri 06:30.</li><li><b>EURJPY LONG</b> - COT-only multi-week contrarian idea against a daily downtrend and a risk-off tape.</li><li><b>AUDNZD SHORT</b> - Macro&#x27;s top idea but RSI 28.3, weekly VWAP z -2.56 and AUD CPI inside 5d.</li><li><b>EURUSD SHORT</b> - Split desk: COT sees EUR short covering, 4H bullish divergences; only a bounce-sell at 1.0990.</li></ul>
+<p class="small"><b>High-impact events, next 5 days:</b></p><ul class="small"><li>Thu 20:30 BKK USD Initial Jobless Claims / Philly Fed (MED)</li><li>Fri 06:30 BKK JPY CPI (HIGH)</li><li>Fri 14:00 BKK GBP Retail Sales (HIGH)</li><li>Fri 20:30 BKK CAD Retail Sales (MED)</li><li>Mon 15:30 BKK EUR Manufacturing PMI flash (HIGH)</li><li>Mon 16:30 BKK GBP PMIs flash (HIGH)</li><li>Tue 16:00 BKK EUR Ifo (HIGH)</li><li>Wed 07:30 BKK AUD CPI (MED, key AUD catalyst)</li></ul>
+
+</div></section>
+<section><h3>The discussion</h3><div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" data-p="p1">Agent 1 · Tech</button><button class="tab" role="tab" aria-selected="false" data-p="p2">Agent 2 · COT</button><button class="tab" role="tab" aria-selected="false" data-p="p3">Agent 3 · Flow</button><button class="tab" role="tab" aria-selected="false" data-p="p4">Agent 4 · Macro</button></div><div class="box"><div class="pane" id="p1"><p class="small">Technical analyst - candles, RSI, MACD, Stochastic, divergences, SMA20/200, VWAP</p><div class="round">Round 1 - analysis</div><h3>Round 1 - Technical Analyst (4H close Thu 19 Nov 2026 13:00 Bangkok)</h3>
+<h4>1. Market read</h4>
+<ul>
+<li><strong>USD is the dominant trend.</strong> DXY 4H RSI 77.3, daily trend up, daily RSI 70.1, +7.73 daily ATR above its SMA200. USD majors confirm: EURUSD/GBPUSD/AUDUSD/NZDUSD all price &lt; SMA20 &lt; SMA200 on 4H with daily trend down; USDCHF/USDCAD daily trend up, 4H stack bullish. USDJPY is the exception (daily &quot;mixed&quot;, RSI 55.8, no divergence), so JPY is not weak against USD.</li>
+<li><strong>Risk-off tape.</strong> VIX 24.55 (daily trend up, +1.78 ATR over SMA200). Indices are deeply oversold on 4H: UK100 RSI 24.7 / Stoch 4.5, HK50 RSI 19.4 / Stoch 2.6 with two straight closes below the 20-bar low, GER40 RSI 28.1 / Stoch 8.2, EU50 RSI 28.3, US30 RSI 29.3. JPY crosses (EURJPY, GBPJPY, CHFJPY, CADJPY, AUDJPY, NZDJPY) all sit below SMA20 and SMA200 on 4H with daily trend down: JPY is bid against everything except USD.</li>
+<li><strong>AUD is the weakest currency</strong>: AUDUSD, AUDJPY, AUDCHF, AUDCAD, AUDNZD all closed below their 20-bar low on the previous bar, then bounced (hammers / closes at 93-97% of range). GBPAUD and EURAUD broke above the 20-bar high on the prior bar and the daily trend is up/mixed.</li>
+<li><strong>Almost everything is stretched into the close.</strong> Many symbols show a regular bullish RSI/MACD/Stoch divergence plus a hammer or bullish engulfing (EURUSD, GBPJPY, EURJPY, CADJPY, US500, US30). The last bar is a bounce bar; the 4H trend is still down. Expect 1-day relief rallies inside the larger trend, so prefer selling USD-weak pairs on bounces rather than chasing the low.</li>
+<li>Horizon: 4H patterns fit 1d; the trend-aligned USD, AUD and JPY views fit 3d.</li>
+</ul>
+<h4>2. Best technical setups</h4>
+<p><strong>1. GBPUSD SHORT - conviction 3, horizon 3d</strong></p>
+<ul>
+<li>Close 1.3135, closed below the 20-bar low (breakdown) but with a hammer (68% lower wick, closed at 68% of range). RSI 27.0 (oversold), MACD hist -1.2 with a bear cross 1 bar ago, Stoch %K 11.8 (oversold). Regular bullish RSI/MACD/Stoch divergences (27 &amp; 13 bars ago) plus developing ones, so a bounce is likely first.</li>
+<li>Price &lt; SMA20 1.31849 (-1.98 ATR) &lt; SMA200 1.33101 (-6.94 ATR); daily trend down, daily RSI 35.9; weekly VWAP 1.31849, z -2.13.</li>
+<li>Entry: sell the bounce into 1.3180 (SMA20 / weekly VWAP). Stop 1.3215 (above prev day high 1.32124). Target 1.3120 (20-bar low 1.31203).</li>
+</ul>
+<p><strong>2. EURUSD SHORT - conviction 3, horizon 3d</strong></p>
+<ul>
+<li>Close 1.09657, hammer (68% lower wick) closing below prior bar low. RSI 31.5, MACD line -28.1 / hist +2.1 (bull cross 12 bars ago, fading), Stoch %K 23.8. Regular bullish RSI (25.37 -&gt; 30.50), MACD and Stoch divergences, hidden bearish divergences from the earlier high (continuation).</li>
+<li>Price &lt; SMA20 1.09942 (-1.35 ATR) &lt; SMA200 1.11686 (-9.59 ATR); daily trend down, daily RSI 29.6; weekly VWAP 1.09931 (z -1.47).</li>
+<li>Entry: sell a bounce to 1.0990. Stop 1.1008 (above prev day high 1.09994). Target 1.0953 (20-bar / prev day low 1.09532); a break extends lower.</li>
+</ul>
+<p><strong>3. US500 LONG (relief bounce) - conviction 3, horizon 3d</strong></p>
+<ul>
+<li>Close 7371.5, inside bar after a bullish engulfing. MACD bull cross this bar (hist +0.4), Stoch %K 41.6 crossed up 1 bar ago, RSI 41.7 (prior 33.7). Regular bullish RSI (29.53 -&gt; 33.68), MACD-hist and Stoch divergences (9 &amp; 3 bars ago). Session VWAP 7361.9 (+0.18 ATR), price held above it.</li>
+<li>Against: price &lt; SMA20 7406.1 &lt; SMA200 7646.4; VIX 24.55 rising. Daily RSI 36.5, daily trend mixed, price +0.11 daily ATR over daily SMA200 7356.5.</li>
+<li>Entry 7371. Stop 7285 (20-bar low 7285.3). First target 7406 (4H SMA20), extension 7568 (week open 7567.9).</li>
+</ul>
+<p><strong>4. GBPAUD LONG (pullback) - conviction 3, horizon 3d</strong></p>
+<ul>
+<li>Close 1.96378 after a -0.67 ATR rejection from the 20-bar-high breakout bar (closed at 3% of range, so wait for the dip). 4H stack price &gt; SMA20 1.95863 &gt; SMA200 1.91758 (+9.00 ATR); daily trend up, daily RSI 70.7. MACD above zero (line 40.4), RSI 62.4.</li>
+<li>Against: developing bearish RSI/MACD/Stoch divergences (unconfirmed), MACD hist -1.2.</li>
+<li>Entry: buy the dip to 1.9590 (SMA20 / weekly VWAP 1.95803). Stop 1.9488 (20-bar low 1.94876). Target 1.9710 (20-bar high 1.97104).</li>
+</ul>
+<p><strong>5. USDCHF LONG - conviction 3, horizon 3d</strong></p>
+<ul>
+<li>Close 0.84361, 4H stack price &gt; SMA20 0.84063 &gt; SMA200 0.8281; daily trend up, daily RSI 69.3, DXY strong. RSI 69.9, MACD line +26.0, hidden bullish RSI/MACD/Stoch divergences (continuation).</li>
+<li>Against: Stoch %K 87.0 (overbought), +1.47 ATR over SMA20, weekly VWAP z 1.8; price at the 60-bar high 0.8443, so the entry is better on a pullback.</li>
+<li>Entry 0.8420. Stop 0.8395 (below prev day low 0.83975). Target 0.8460 (ATR-based extension beyond the 0.8443 high, since no level sits above).</li>
+</ul>
+<p><strong>6. US30 LONG (oversold bounce) - conviction 2, horizon 1d-3d</strong></p>
+<ul>
+<li>Close 50453.7, closed at 94% of range, inside bar. RSI 29.3 (prior 22.3), Stoch %K 16.7 crossed up 1 bar ago. Regular bullish MACD-hist (-153.65 -&gt; -104.76) and Stoch divergences (8 &amp; 3 bars ago). Weekly VWAP -2.18 ATR, 4H SMA20 -2.51 ATR.</li>
+<li>Against: MACD hist still -71.9, price &lt; SMA20 51231 &lt; SMA200 52004, daily trend mixed, no RSI divergence.</li>
+<li>Entry 50450. Stop 50049 (20-bar / prev day low 50049.4). Target 51231 (4H SMA20).</li>
+</ul>
+<h4>3. Avoid list</h4>
+<ul>
+<li>AUDUSD: RSI 23.1 and -2.13 ATR under SMA20, closed at 96% of range after a breakdown; short is stretched, long fights a daily downtrend.</li>
+<li>AUDJPY / AUDCAD / AUDNZD: AUD trend is down but RSI 28-31, AUDNZD weekly VWAP z -2.56 and AUDCAD RSI 28.8; poor risk for shorts, developing bullish divergences argue against chasing.</li>
+<li>USDCAD: RSI 72.2 and shooting star (92% upper wick, closed at 8% of range) with regular bearish RSI/MACD/Stoch divergences against a strong daily uptrend; conflicting.</li>
+<li>GBPNZD: bearish engulfing and regular bearish divergences, but price is above SMA200 with daily trend up and Stoch %K 11.5 oversold; mixed.</li>
+<li>HK50: two closes below the 20-bar low with RSI 19.4 and Stoch 2.6; falling knife with a regular bullish divergence, no clean entry.</li>
+<li>UK100: session VWAP z 2.78, Stoch 4.5; stretched both ways with a regular bearish divergence from the older high.</li>
+<li>EURGBP: ATR only 8.5 pips, shooting star, daily trend down but price above SMA20; noise.</li>
+<li>NZDCHF: session VWAP z 2.14 and Stoch 82.4 while below SMA200; stretched and counter-trend.</li>
+<li>JPY crosses (EURJPY, GBPJPY, CHFJPY, CADJPY): bullish divergences with bull candles bounce against a daily downtrend; shorts are late, longs are counter-trend.</li>
+</ul>
+<details class="raw"><summary>structured output</summary><pre>{&quot;agent&quot;: &quot;technical&quot;, &quot;candidates&quot;: [
+{&quot;symbol&quot;: &quot;GBPUSD&quot;, &quot;direction&quot;: &quot;SHORT&quot;, &quot;conviction&quot;: 3, &quot;horizon&quot;: &quot;3d&quot;, &quot;entry&quot;: 1.3180, &quot;stop&quot;: 1.3215, &quot;target&quot;: 1.3120, &quot;reason&quot;: &quot;Daily downtrend and strong USD, breakdown below 20-bar low; sell the bounce to SMA20/weekly VWAP despite oversold RSI 27&quot;},
+{&quot;symbol&quot;: &quot;EURUSD&quot;, &quot;direction&quot;: &quot;SHORT&quot;, &quot;conviction&quot;: 3, &quot;horizon&quot;: &quot;3d&quot;, &quot;entry&quot;: 1.0990, &quot;stop&quot;: 1.1008, &quot;target&quot;: 1.0953, &quot;reason&quot;: &quot;Price &lt; SMA20 &lt; SMA200 with daily RSI 29.6; hammer and bullish divergences argue for a bounce to sell&quot;},
+{&quot;symbol&quot;: &quot;US500&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;conviction&quot;: 3, &quot;horizon&quot;: &quot;3d&quot;, &quot;entry&quot;: 7371, &quot;stop&quot;: 7285, &quot;target&quot;: 7568, &quot;reason&quot;: &quot;MACD bull cross plus regular bullish RSI/MACD/Stoch divergences, held above session VWAP; relief bounce toward SMA20 and week open&quot;},
+{&quot;symbol&quot;: &quot;GBPAUD&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;conviction&quot;: 3, &quot;horizon&quot;: &quot;3d&quot;, &quot;entry&quot;: 1.9590, &quot;stop&quot;: 1.9488, &quot;target&quot;: 1.9710, &quot;reason&quot;: &quot;AUD weakness, daily uptrend and SMA20&gt;SMA200 stack; buy the dip after a rejection bar&quot;},
+{&quot;symbol&quot;: &quot;USDCHF&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;conviction&quot;: 3, &quot;horizon&quot;: &quot;3d&quot;, &quot;entry&quot;: 0.8420, &quot;stop&quot;: 0.8395, &quot;target&quot;: 0.8460, &quot;reason&quot;: &quot;Daily uptrend, hidden bullish divergences and strong DXY; Stoch 87 overbought so buy a pullback&quot;},
+{&quot;symbol&quot;: &quot;US30&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;conviction&quot;: 2, &quot;horizon&quot;: &quot;1d&quot;, &quot;entry&quot;: 50450, &quot;stop&quot;: 50049, &quot;target&quot;: 51231, &quot;reason&quot;: &quot;RSI 29.3 oversold with bullish MACD/Stoch divergences and Stoch cross up; counter-trend bounce&quot;}
+], &quot;avoid&quot;: [&quot;AUDUSD&quot;, &quot;AUDJPY&quot;, &quot;AUDCAD&quot;, &quot;AUDNZD&quot;, &quot;USDCAD&quot;, &quot;GBPNZD&quot;, &quot;HK50&quot;, &quot;UK100&quot;, &quot;EURGBP&quot;, &quot;NZDCHF&quot;]}</pre></details><div class="round">Round 2 - debate</div><h3>Round 2 - Technical Analyst (Tech)</h3>
+<h4>1. Where I agree</h4>
+<ul>
+<li><strong>Flow on EURUSD short.</strong> Daily RRG Lagging plus a 77% long crowd fits my chart: price &lt; SMA20 1.09942 &lt; SMA200 1.11686, daily RSI 29.6, 4H closed below the prior bar low. Flow&#x27;s &quot;4H Improving, bounce first&quot; matches my hammer plus regular bullish RSI/MACD/Stoch divergences, so I sell the bounce to 1.0990, not the low.</li>
+<li><strong>Flow on EURAUD long.</strong> My brief has EURAUD and GBPAUD both breaking the 20-bar high on the prior bar with daily trend up/mixed. Flow&#x27;s RRG Leading on both timeframes, plus Macro&#x27;s AUD jobs miss (-43.5K vs +25K), add to the AUD-weakness leg. I rank it above my own GBPAUD because both legs agree (EUR 4H improving, AUD lagging).</li>
+<li><strong>Macro/Flow on GBP weakness.</strong> GBPUSD sits -1.98 ATR under SMA20, weekly VWAP z -2.13, daily trend down. Flow&#x27;s GBP Lagging 4H (24H -0.274) and Macro&#x27;s GBP 2y -6.9bp 1w support the short.</li>
+<li><strong>Flow/Macro on USDCAD long.</strong> Daily uptrend and 4H stack bullish agree, but see disagreement on entry.</li>
+</ul>
+<h4>2. Where I disagree</h4>
+<ul>
+<li><strong>COT on EURUSD long (and EURJPY long).</strong> EUR at an extreme with +21,395 short covering is a multi-week story. On 4H, EURUSD is still below SMA20 and SMA200 (-9.59 ATR), and COT itself says the trigger is missing. EURJPY is below both SMAs with daily trend down and JPY is bid on every cross, so this long is early. I vote against.</li>
+<li><strong>COT on NZDJPY long.</strong> The engulfing bar is a bounce inside a daily downtrend, price still under SMA200, JPY crosses all bid with VIX 24.55. A 1d bounce at best. Against.</li>
+<li><strong>Flow on AUDJPY and AUDUSD short.</strong> My avoid list: AUDUSD RSI 23.1, -2.13 ATR under SMA20, closed at 96% of range after the breakdown; AUDJPY RSI 30.6. Both are chasing, and COT shows AUD shorts crowded. Right theme, wrong entry. Against for now.</li>
+<li><strong>Macro on AUDNZD / AUDCAD short.</strong> AUDNZD RSI 28.3, weekly VWAP z -2.56, AUDCAD RSI 28.8 with bullish divergences. Poor risk after the move, and AUD CPI Wed 07:30 can reverse them. Against.</li>
+<li><strong>USDCAD long.</strong> I avoided it: RSI 72.2, shooting star (92% upper wick), regular bearish RSI/MACD/Stoch divergences. Neutral only if bought on a dip.</li>
+<li><strong>GBPNZD short.</strong> Stoch 11.5 oversold, price above SMA200, daily up. Neutral.</li>
+</ul>
+<h4>3. What changed my mind</h4>
+<ul>
+<li>Flow&#x27;s EURAUD data moves it above my GBPAUD and USDCHF. I keep GBPAUD as the same-theme backup.</li>
+<li>COT&#x27;s warning that EUR shorts are crowded cuts my EURUSD short from &quot;sell any bounce&quot; to &quot;sell only at 1.0990 with the 1.1008 stop&quot;. Conviction stays 3.</li>
+<li>Macro&#x27;s Fri 14:00 GBP Retail Sales [HIGH] sits inside my GBPUSD 3d window. I keep the stop at 1.3215 and flag the risk.</li>
+<li>I drop US30 long to neutral. No other analyst supports it, and Flow shows only a mild z -1.59.</li>
+</ul>
+<h4>4. Final ranking</h4>
+<ol>
+<li><strong>EURAUD LONG, 3d, conviction 3.</strong> Both legs agree, with Flow, Macro and my breakout all pointing the same way.</li>
+<li><strong>EURUSD SHORT, 3d, conviction 3.</strong> Tech and Flow agree; sell the bounce to 1.0990.</li>
+<li><strong>GBPUSD SHORT, 3d, conviction 3.</strong> Trend-aligned, event risk Fri 14:00.</li>
+</ol>
+<details class="raw"><summary>structured output</summary><pre>{&quot;agent&quot;: &quot;technical&quot;, &quot;final_top3&quot;: [
+{&quot;symbol&quot;: &quot;EURAUD&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;horizon&quot;: &quot;3d&quot;, &quot;conviction&quot;: 3},
+{&quot;symbol&quot;: &quot;EURUSD&quot;, &quot;direction&quot;: &quot;SHORT&quot;, &quot;horizon&quot;: &quot;3d&quot;, &quot;conviction&quot;: 3},
+{&quot;symbol&quot;: &quot;GBPUSD&quot;, &quot;direction&quot;: &quot;SHORT&quot;, &quot;horizon&quot;: &quot;3d&quot;, &quot;conviction&quot;: 3}
+], &quot;votes&quot;: {
+&quot;GBPUSD SHORT&quot;: &quot;for&quot;,
+&quot;EURUSD SHORT&quot;: &quot;for&quot;,
+&quot;US500 LONG&quot;: &quot;neutral&quot;,
+&quot;GBPAUD LONG&quot;: &quot;for&quot;,
+&quot;USDCHF LONG&quot;: &quot;neutral&quot;,
+&quot;US30 LONG&quot;: &quot;neutral&quot;,
+&quot;EURJPY LONG&quot;: &quot;against&quot;,
+&quot;NZDJPY LONG&quot;: &quot;against&quot;,
+&quot;AUDJPY LONG&quot;: &quot;against&quot;,
+&quot;EURUSD LONG&quot;: &quot;against&quot;,
+&quot;AUDCHF LONG&quot;: &quot;against&quot;,
+&quot;USDCAD LONG&quot;: &quot;neutral&quot;,
+&quot;AUDJPY SHORT&quot;: &quot;against&quot;,
+&quot;AUDUSD SHORT&quot;: &quot;against&quot;,
+&quot;EURAUD LONG&quot;: &quot;for&quot;,
+&quot;AUDNZD SHORT&quot;: &quot;against&quot;,
+&quot;GBPNZD SHORT&quot;: &quot;neutral&quot;,
+&quot;AUDCAD SHORT&quot;: &quot;against&quot;,
+&quot;EURGBP LONG&quot;: &quot;against&quot;
+}}</pre></details></div><div class="pane" id="p2" hidden><p class="small">Positioning analyst - CFTC Commitments of Traders extremes</p><div class="round">Round 1 - analysis</div><h3>Agent 2 (COT) - Round 1, 4H close Thu 19 Nov 2026 13:00 Bangkok</h3>
+<p>Data caveat: latest COT report is as of Tue 10 Nov (released Fri 13 Nov), so 9 days old. The brief has no price history since then, only the current technical one-liners. Positioning is a 3-5 day / multi-week lens, not a 1-day one.</p>
+<h4>1. Positioning map</h4>
+<ul>
+<li><strong>JPY - EXTREME BULLISH, still building.</strong> Composite 98 (prev 96), NC %K52 96 (prev 90), CM %K52 6, NC net +123,113, week change +20,792, NC long ratio at 52w max zone. Crowded long JPY, no turn yet.</li>
+<li><strong>CHF - EXTREME BULLISH, at the cap.</strong> Composite 100 (prev 100), NC %K52 98 (prev 98), CM %K52 5, NC net still -9,153 but +7,436 on the week, NC net 3y pct 94. Flat at the ceiling, no unwind yet.</li>
+<li><strong>EUR - EXTREME BEARISH, starting to unwind.</strong> Composite 6 (prev 0), NC %K52 2 (prev 0), CM %K52 98, NC net -136,396 but +21,395 on the week (short covering). Still at the 52w low zone, but this is the first move off the floor.</li>
+<li><strong>AUD - EXTREME BEARISH, still building.</strong> Composite 0 (prev 2), NC %K52 0, CM %K52 99, NC net -151,753 and -22,296 more on the week, NC %OI -43.0. Shorts are still being added, so no turn.</li>
+<li><strong>NZD - near-extreme bearish, edging up.</strong> Composite 14 (prev 6), NC %K52 10 (prev 9), CM %K52 89, NC %OI -42.0, NC net +4,649 on the week. Does not meet the EXTREME rule (composite above 10), but it is the same crowd as AUD.</li>
+<li><strong>GBP - rebuilding from neutral.</strong> Composite 76 (prev 45), NC net -43,216 but +16,605 on the week, NC %K52 50. Not an extreme.</li>
+<li><strong>CAD - mildly bullish.</strong> Composite 75 (prev 63), NC %K26 84, NC %K52 61. Not an extreme.</li>
+<li><strong>USD - moderately long, fading.</strong> Composite 78 (prev 82), NC %K52 78 (prev 79), net +13,813 (wk -377). No extreme.</li>
+<li><strong>US100 - drifting off.</strong> NC %K52 82 (prev 89), composite 71 (prev 76), net +29,131 (wk -13,742). Mild unwind, no extreme.</li>
+<li><strong>US500 and US30 - neutral.</strong> US500 composite 41, NC %K52 37, net -138,634 (wk -9,220). US30 composite 65, NC %K52 73.</li>
+</ul>
+<p>Net read: the cleanest positioning map is &quot;long JPY and CHF, short EUR, AUD and NZD&quot; among speculators. Contrarian, that favours long AUD/NZD/EUR against JPY/CHF over several weeks. EUR is the only one of the four extremes already turning.</p>
+<h4>2. COT + technical trade ideas</h4>
+<ol>
+<li><strong>EURJPY LONG - conviction 3, horizon 5d.</strong></li>
+</ol>
+<ul>
+<li class="sub">COT: pair spread composite -92, NC %K52 -94, NC %K26 -93, so speculators are crowded against the pair. EUR leg is unwinding (composite 0 to 6, +21,395 NC net) while the JPY leg is at the top (composite 98, %K52 96).</li>
+<li class="sub">Technical: 4H is a bullish close, MACD hist +2.4 (still below the zero line), div count 4. Still price &lt; SMA20 &lt; SMA200 with a daily downtrend, RSI 35.1, Stoch 39.4.</li>
+<li class="sub">Trigger missing: wait for a 4H close back above SMA20, or the daily trend turning from &quot;down&quot;.</li>
+<li class="sub">Invalidation: JPY NC net keeps rising with price extending 2 ATR (about 70.6 pips on ATR 35.3) below the current 174.961.</li>
+</ul>
+<ol>
+<li><strong>NZDJPY LONG - conviction 3, horizon 3d to 5d.</strong></li>
+</ol>
+<ul>
+<li class="sub">COT: spread composite -84, NC %K52 -86, NC %K26 -86. NZD at 52w low zone (%K52 10, composite 14 vs 6 prior), JPY at the top.</li>
+<li class="sub">Technical: the trigger is present. A bullish engulfing/outside bar, price &gt; SMA20, MACD hist +3.8, sessVWAP +0.45 ATR, RSI 44.1, Stoch 48.7. The daily trend is still down and price &lt; SMA200.</li>
+<li class="sub">Invalidation: a 4H close back below the SMA20 / the engulfing bar low.</li>
+</ul>
+<ol>
+<li><strong>AUDJPY LONG - conviction 2, horizon 5d.</strong></li>
+</ol>
+<ul>
+<li class="sub">COT: strongest spread on the board bar AUDCHF: composite -98, NC %K52 -96, NC %K26 -96. But AUD shorts are still building (-22,296 on the week, composite 0), and JPY longs are still building (+20,792).</li>
+<li class="sub">Technical: bullish close, RSI 30.6, Stoch 21.8, price &lt; SMA20 &lt; SMA200, daily trend down, MACD hist -0.7 (&lt;0 line), div 3. Oversold, but there is no reversal trigger.</li>
+<li class="sub">Trigger missing: wait for a close above SMA20 or MACD hist turning positive. Conviction is capped because neither leg is unwinding.</li>
+<li class="sub">Invalidation: a fresh 4H low with AUD NC net still falling in the next report.</li>
+</ul>
+<ol>
+<li><strong>EURUSD LONG - conviction 2, horizon 5d (wait).</strong></li>
+</ol>
+<ul>
+<li class="sub">COT: EUR is the one extreme that is unwinding (composite 6, %K52 2, +21,395 NC net). The USD leg is only moderate (composite 78, falling from 82), so the pair spread is -72 and the positioning case rests on the EUR extreme alone.</li>
+<li class="sub">Technical: bearish hammer (after decline) but a close below the prior bar low, RSI 31.5, MACD hist +2.1, price &lt; SMA20 &lt; SMA200, daily trend down, div 6.</li>
+<li class="sub">Trigger missing: wait for a 4H close above the prior bar high and above SMA20.</li>
+<li class="sub">Invalidation: EUR NC net turning back down in the next report.</li>
+</ul>
+<ol>
+<li><strong>AUDCHF LONG - conviction 2, horizon 5d (wait).</strong></li>
+</ol>
+<ul>
+<li class="sub">COT: spread composite -100, NC %K52 -98, NC %K26 -97, the most extreme pair on the board. CHF is capped at 100 and flat, AUD is still building shorts.</li>
+<li class="sub">Technical: bullish bar, RSI 41.5, MACD hist -1.0 (&lt;0 line), div 6 (the highest count in this set), price &lt; SMA20 &lt; SMA200, daily trend mixed.</li>
+<li class="sub">Trigger missing: wait for a 4H close above SMA20 or MACD hist crossing above 0.</li>
+<li class="sub">Invalidation: a new 4H low with the next AUD report adding shorts.</li>
+</ul>
+<h4>3. Crowded-trade warnings</h4>
+<ul>
+<li>EURJPY short (daily down, price &lt; SMA20 &lt; SMA200) runs into EUR at a bearish extreme with +21,395 short covering. A squeeze risk even though JPY is crowded long.</li>
+<li>AUDUSD short (RSI 23.1, daily down) runs into AUD NC %K52 0 and CM %K52 99. A bullish hammer is already printing.</li>
+<li>EURUSD short (RSI 31.5, closed below prior low) runs into EUR %K52 2 and the unwind that has started.</li>
+<li>AUDJPY / AUDCAD / AUDNZD shorts (RSI 30.6 / 28.8 / 28.3, AUDCAD div 8) run into the AUD extreme, which is a crowded short.</li>
+<li>USDCHF long (RSI 69.9, Stoch 87.0, price &gt; SMA20 &gt; SMA200) is contrarian-correct vs CHF composite 100 but overbought. Chasing it is a poor entry.</li>
+<li>EURCHF long: Stoch 88.0 and a hanging man at the top of the range, while CHF is at composite 100. Positioning is favourable but the entry is poor, so wait for a pullback.</li>
+<li>USDJPY long (RSI 55.8, price &gt; SMA20 &gt; SMA200) is supported by JPY at 98, but the USD leg is only 78 and fading, so spread -20 is weak. Low edge.</li>
+<li>US100 long: NC %K52 82 is off its 89 high and composite 71 is falling, with a hanging man at Stoch 74.7. Mild late-crowd risk.</li>
+</ul>
+<details class="raw"><summary>structured output</summary><pre>{&quot;agent&quot;: &quot;cot&quot;, &quot;candidates&quot;: [{&quot;symbol&quot;: &quot;EURJPY&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;conviction&quot;: 3, &quot;horizon&quot;: &quot;5d&quot;, &quot;reason&quot;: &quot;Spread composite -92: EUR extreme short unwinding (comp 0 to 6, NC +21,395) vs JPY extreme long (comp 98); needs 4H close above SMA20&quot;}, {&quot;symbol&quot;: &quot;NZDJPY&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;conviction&quot;: 3, &quot;horizon&quot;: &quot;5d&quot;, &quot;reason&quot;: &quot;Spread composite -84, NZD %K52 10 vs JPY 96; 4H bullish engulfing/outside bar above SMA20, MACD hist +3.8&quot;}, {&quot;symbol&quot;: &quot;AUDJPY&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;conviction&quot;: 2, &quot;horizon&quot;: &quot;5d&quot;, &quot;reason&quot;: &quot;Spread composite -98 but AUD shorts still building (-22,296); RSI 30.6, no trigger, wait for SMA20 reclaim&quot;}, {&quot;symbol&quot;: &quot;EURUSD&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;conviction&quot;: 2, &quot;horizon&quot;: &quot;5d&quot;, &quot;reason&quot;: &quot;EUR composite 6, %K52 2 and unwinding vs USD 78 fading; close below prior low, wait for 4H close above prior high/SMA20&quot;}, {&quot;symbol&quot;: &quot;AUDCHF&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;conviction&quot;: 2, &quot;horizon&quot;: &quot;5d&quot;, &quot;reason&quot;: &quot;Spread composite -100, NC %K52 -98, div 6; bullish bar but price &lt; SMA20 &lt; SMA200, wait for SMA20 reclaim&quot;}], &quot;warnings&quot;: [&quot;EURJPY short vs EUR extreme short covering (+21,395, composite 6)&quot;, &quot;AUDUSD short vs AUD NC %K52 0 / CM %K52 99 and a bullish hammer&quot;, &quot;EURUSD short vs EUR %K52 2 with unwind started&quot;, &quot;AUDJPY/AUDCAD/AUDNZD shorts at RSI 28-31 vs AUD crowded short&quot;, &quot;USDCHF long RSI 69.9 / Stoch 87 chasing against CHF composite 100&quot;, &quot;EURCHF long Stoch 88 hanging man into CHF composite 100, wait for pullback&quot;, &quot;US100 long with NC %K52 off 89 to 82 and composite 76 to 71&quot;]}</pre></details><div class="round">Round 2 - debate</div><h3>Agent 2 (COT) - Round 2</h3>
+<h4>1. Where I agree</h4>
+<ul>
+<li><strong>Flow, USDCAD LONG.</strong> COT does not fight it: USD composite 78 (net +13,813) and CAD composite 75 (NC %K26 84) are both only moderately bullish, so there is no crowded-trade problem on either leg. Flow&#x27;s retail 18.9% long adds the contrarian support. Tech/Macro both flag RSI 72.2 and a shooting star, so buy dips.</li>
+<li><strong>Tech, GBPAUD LONG (pullback).</strong> AUD is at a COT extreme (composite 0, NC %K52 0, shorts still building, -22,296 on the week) and GBP is rebuilding (composite 76 from 45). Positioning agrees on direction, but a crowded AUD short can squeeze, so only buy the dip as Tech says.</li>
+<li><strong>Macro, EURGBP LONG.</strong> EUR composite 6 and unwinding (+21,395 NC net) vs GBP 76. This is a mild COT match (contrarian EUR long). Flow&#x27;s 84.55% retail long and the GBP Retail Sales event cap it at conviction 2.</li>
+<li><strong>Flow and Tech on JPY strength.</strong> JPY composite 98, %K52 96 supports the &quot;JPY bid&quot; theme, but it is a crowded long and still building, not fresh.</li>
+</ul>
+<h4>2. Where I disagree</h4>
+<ul>
+<li><strong>Flow, AUDJPY SHORT (conviction 4) and AUDUSD SHORT.</strong> The trend is real, but AUD is at the most crowded short on the board (composite 0, CM %K52 99, RSI 23.1 for AUDUSD, bullish hammer). Shorting here is shorting into an extreme, with AUD CPI on Wed 25 Nov inside a 5d window. AUDJPY is the exception: the spread favours long AUDJPY on a multi-week view, and JPY longs are also crowded (%K52 96). I cut it to a 1-day idea at best, not a 3d conviction 4.</li>
+<li><strong>Flow and Tech, EURUSD SHORT.</strong> EUR composite 6 vs 0 prior, NC +21,395 short covering: the first unwind off the floor. Flow&#x27;s own 4H RRG shows EUR improving (mom 102.462). Hammer plus bullish divergences say the same. Against.</li>
+<li><strong>Macro, GBPNZD SHORT and AUDCAD SHORT.</strong> GBP composite 76 vs NZD 14 means the COT spread favours GBPNZD long, not short. AUDCAD short runs into AUD composite 0 vs CAD 75, where the contrarian read is long. Against both.</li>
+<li><strong>Tech, USDCHF LONG.</strong> Contrarian-correct vs CHF composite 100, but RSI 69.9 and Stoch 87. Neutral, no chase.</li>
+</ul>
+<h4>3. What changed my mind</h4>
+<ul>
+<li><strong>Flow: NZDJPY retail 82.32% long.</strong> My NZDJPY trigger (engulfing, MACD hist +3.8) is present, but a crowded retail long on the same side weakens it. I cut conviction from 3 to 2.</li>
+<li><strong>Macro: JPY CPI Fri 06:30 [HIGH], core forecast 2.3% vs 2.1%.</strong> A hot print is a risk for every JPY-short idea (EURJPY, NZDJPY, AUDJPY long). It is inside the first day only, so my 5d horizon is intact, but I would wait for the print. EURJPY stays at 3.</li>
+<li><strong>Tech&#x27;s &quot;daily trend down&quot; on all JPY crosses</strong> keeps AUDJPY and AUDCHF longs at 2 with no trigger. I do not promote them.</li>
+</ul>
+<h4>4. My final ranking</h4>
+<ol>
+<li><strong>EURJPY LONG, 5d, conviction 3.</strong> Spread composite -92, EUR unwinding vs JPY at 98. Needs a 4H close above SMA20.</li>
+<li><strong>USDCAD LONG, 3d, conviction 3.</strong> COT neutral-to-supportive, Flow retail 18.9% long, RRG Leading, Macro spread widening +33.8bp 13w.</li>
+<li><strong>NZDJPY LONG, 5d, conviction 2.</strong> Spread composite -84, trigger present, retail crowd long and JPY CPI risk trim it.</li>
+</ol>
+<details class="raw"><summary>structured output</summary><pre>{&quot;agent&quot;: &quot;cot&quot;, &quot;final_top3&quot;: [{&quot;symbol&quot;: &quot;EURJPY&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;horizon&quot;: &quot;5d&quot;, &quot;conviction&quot;: 3}, {&quot;symbol&quot;: &quot;USDCAD&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;horizon&quot;: &quot;3d&quot;, &quot;conviction&quot;: 3}, {&quot;symbol&quot;: &quot;NZDJPY&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;horizon&quot;: &quot;5d&quot;, &quot;conviction&quot;: 2}], &quot;votes&quot;: {&quot;GBPUSD SHORT&quot;: &quot;neutral&quot;, &quot;EURUSD SHORT&quot;: &quot;against&quot;, &quot;US500 LONG&quot;: &quot;neutral&quot;, &quot;GBPAUD LONG&quot;: &quot;for&quot;, &quot;USDCHF LONG&quot;: &quot;neutral&quot;, &quot;US30 LONG&quot;: &quot;neutral&quot;, &quot;EURJPY LONG&quot;: &quot;for&quot;, &quot;NZDJPY LONG&quot;: &quot;for&quot;, &quot;AUDJPY LONG&quot;: &quot;neutral&quot;, &quot;EURUSD LONG&quot;: &quot;for&quot;, &quot;AUDCHF LONG&quot;: &quot;neutral&quot;, &quot;USDCAD LONG&quot;: &quot;for&quot;, &quot;AUDJPY SHORT&quot;: &quot;against&quot;, &quot;AUDUSD SHORT&quot;: &quot;against&quot;, &quot;EURAUD LONG&quot;: &quot;neutral&quot;, &quot;AUDNZD SHORT&quot;: &quot;neutral&quot;, &quot;GBPNZD SHORT&quot;: &quot;against&quot;, &quot;AUDCAD SHORT&quot;: &quot;against&quot;, &quot;EURGBP LONG&quot;: &quot;for&quot;}}</pre></details></div><div class="pane" id="p3" hidden><p class="small">Rotation, sentiment &amp; statistics - Forex RRG, retail sentiment, Forex Stats</p><div class="round">Round 1 - analysis</div><h3>Agent 3 (Flow) - Round 1 - 4H close Thu 19 Nov 2026 13:00 BKK</h3>
+<h4>1. Rotation &amp; strength</h4>
+<p>Daily RRG (last bar 18 Nov):</p>
+<ul>
+<li>Strong: JPY Leading (RS 101.235, mom 100.775, heading up-right dx +0.243 dy +0.372; 1W +1.303) and USD Leading (RS 102.027, mom 101.006; 1W +0.968).</li>
+<li>Weak: AUD Lagging (RS 97.253, mom 99.121; 1W -1.304, the weakest), CHF Lagging (RS 99.777, mom 97.467, heading down-left; 1W -0.427).</li>
+<li>Fading: GBP Weakening (RS 101.319, mom 98.606, dx -0.276 dy -0.72) and CAD Weakening (RS 100.934, mom 99.406). EUR and NZD Improving, both still below 100 RS (98.913 / 98.836).</li>
+</ul>
+<p>4H RRG (last bar 02:00-06:00 UTC):</p>
+<ul>
+<li>Improving and heading up: EUR (RS 98.925, mom 102.462, dy +2.039, the sharpest tail step), NZD (RS 99.998, mom 101.011, dx +0.553 dy +0.599; 24H +0.353, best of the day), CHF (mom 101.078).</li>
+<li>Weak: GBP Lagging (RS 98.288, mom 97.852, dx -0.199 dy -0.915; 24H -0.274), AUD Lagging (RS 98.082, heading down-left dx -0.411 dy -0.623; 24H -0.313).</li>
+<li>USD (4H) Weakening, RS 101.43, mom 99.717, so the daily-leading USD is cooling intraday. JPY (4H) Weakening, mom 99.132. CAD Leading, RS 100.513.</li>
+</ul>
+<p>Pairs where 4H and Daily agree:</p>
+<ul>
+<li>Long: USDJPY (Leading/Leading: 100.737,100.151 / 101.043,100.278; daily mom fading, dy -0.381), EURAUD (Leading/Leading: 101.901,101.22 / 101.835,101.513), EURGBP (Leading/Improving).</li>
+<li>Short: AUDUSD (Lagging/Lagging: 98.326,99.967 / 97.567,98.923), AUDNZD (Lagging/Lagging, 98.004,98.861 4H, tail down-left -0.784,-1.139), GBPNZD (Lagging/Weakening), EURNZD (Lagging/Weakening).</li>
+<li>Split (4H bounce inside a daily downtrend, tails fading): AUDJPY 4H Improving (98.195,100.168, dx -0.137 dy -0.194) vs Daily Lagging (97.713,98.838); EURUSD 4H Improving (98.57,100.582) vs Daily Lagging (98.254,99.664); CADJPY 4H Improving vs Daily Lagging (99.24,99.122).</li>
+<li>Daily-up / 4H-cooling: USDCAD Leading daily (101.653,101.102) vs Weakening 4H (101.268,99.794); USDCHF same pattern.</li>
+</ul>
+<p>Net picture: daily is USD/JPY strong, AUD/CHF weak; intraday NZD/EUR are bouncing and USD is easing. Best &quot;strong vs weak&quot; daily pairs: AUDJPY (JPY Leading vs AUD Lagging) and AUDUSD.</p>
+<h4>2. Sentiment extremes (contrarian)</h4>
+<ul>
+<li>Crowd heavily long (bearish for the pair): EURGBP 84.55%, NZDUSD 83.66% (longs -169.5 pips), NZDJPY 82.32%, NZDCAD 80.21%, EURCAD 80.11%, EURUSD 77.41% (longs -321.3 pips, shorts -47.7), CADJPY 76.59% (longs -161.9), AUDCHF 71.44%, AUDCAD 71.44%. Near the line: AUDUSD 69.67% (MyFxBook 84.62%, longs -182.0 pips), AUDJPY 69.41% (MyFxBook 88.07%, longs -315.6).</li>
+<li>Crowd heavily short (bullish): USDCAD 18.9% long (MyFxBook 8.08%; shorts -208.5 pips under water, longs +129.5), EURNZD 26.07% (shorts -1028 pips), GBPAUD 26.8%. Leaning short: EURAUD 33.59% (shorts -284.9), USDJPY 35.34% (shorts -345.2 pips), AUDNZD 32.25%, GBPNZD 31.3%.</li>
+<li>Indices: GER40 28.8% long (bullish contrarian; RSI 28.1, Stoch 8.2), HK50 72.15% and CN50 73.77% long (bearish contrarian; HK50 broke its 20-bar low, RSI 19.4). No RRG or Stats sigma for these, so no sized trade.</li>
+<li>Sentiment agrees with RRG: USDCAD long, EURUSD short (daily), AUDUSD short, AUDJPY short, CADJPY short (daily), EURAUD long, USDJPY long (mild).</li>
+<li>Sentiment conflicts with RRG, so no trade: EURGBP (84.55% long says short, RRG Leading with 4H dy +1.484 says long), NZDUSD (crowd 83.66% long vs 4H Improving), AUDNZD (RRG short, but crowd only 32% long and RSI 28.3 / Stoch 11.8 after -55.6 pips today), GBPNZD, EURNZD, GBPAUD (crowd heavily short vs 4H RRG Leading).</li>
+</ul>
+<h4>3. Statistical context</h4>
+<ul>
+<li>Nothing is extreme. Largest: US30 week-to-date -3.7% (z -1.59, stretched; RSI 29.3, Stoch 16.7, mean-reversion odds up), AUDNZD today -55.6 pips (z -1.11), US500 week -2.6% (z -1.05).</li>
+<li>FX weekly z-scores for the idea pairs are small: AUDJPY -0.88, AUDUSD -0.69, EURAUD +0.52, USDCAD +0.49, EURUSD -0.40, CADJPY -0.36. Room to run, not late.</li>
+<li>Week timing (today is Thursday): in down weeks the low prints Friday in 50-57% of cases (EURUSD 56%, AUDUSD 51%, AUDJPY 50%, CADJPY 51%); in up weeks the high prints Friday in 48-58% (USDCAD 54%, EURAUD 54%). For the weekly-direction ideas the week&#x27;s extreme is probably not yet in, which fits 1d holds into Friday.</li>
+<li>1-sigma ranges (1d/3d/5d, pips): AUDUSD 57.3/99.2/128.1; AUDJPY 74.6/129.1/166.7; USDCAD 63.3/109.6/141.5; EURAUD 104.5/181.0/233.6; EURUSD 68.4/118.5/153.0; CADJPY 71.2/123.3/159.2; USDJPY 70.0/121.2/156.4. Targets below are about 0.6 sigma at each horizon (realistic, inside the range), stops should sit near 0.5-0.7 of the 1-day sigma.</li>
+<li>Caution: AUDUSD (RSI 23.1, Stoch 17, bullish hammer), AUDJPY (RSI 30.6), AUDCAD (RSI 28.8) are oversold on 4H, so entries should be on bounces rather than at the lows.</li>
+</ul>
+<h4>4. Trade ideas</h4>
+<ol>
+<li><strong>USDCAD LONG, conviction 4, horizon 3d (fits 3-5d).</strong> Crowd 18.9% long (MyFxBook 8.08%), shorts -208.5 pips under water; daily RRG Leading (101.653, 101.102) with USD daily Leading; week +67.8 pips (z +0.49), up-week high tends to print Friday (54%). Caution: 4H RRG Weakening (mom 99.794) and a 4H doji/shooting star at RSI 72.2, so buy dips. Targets 1d/3d/5d: 40 / 65 / 85 pips.</li>
+<li><strong>AUDJPY SHORT, conviction 4, horizon 3d.</strong> Daily RRG Lagging (97.713, 98.838) with JPY Leading (1W +1.303) vs AUD weakest (1W -1.304); 4H pair &quot;Improving&quot; bounce is fading (dx -0.137 dy -0.194); crowd 69.41% long (MyFxBook 88.07%), longs -315.6 pips; week -144.4 pips (z -0.88). Caution: RSI 30.6, Stoch 21.8. Targets: 45 / 80 / 100 pips.</li>
+<li><strong>AUDUSD SHORT, conviction 3, horizon 3d.</strong> RRG Lagging on both 4H (98.326, 99.967) and Daily (97.567, 98.923); crowd 69.67% long, longs -182.0 pips; week -87.1 (z -0.69). Caution: RSI 23.1 with a 4H bullish hammer, USD 4H easing. Same AUD-weakness theme as idea 2. Targets: 35 / 60 / 80 pips.</li>
+<li><strong>EURAUD LONG, conviction 3, horizon 3d.</strong> RRG Leading on both TFs (4H 101.901/101.22, tail dx +0.527 dy +1.292; Daily 101.835/101.513); EUR 4H mom 102.462 vs AUD weakest; crowd 33.59% long, shorts -284.9 pips; week +122 pips (z +0.52). Caution: 4H bar bearish, sessVWAP -0.32 ATR; sentiment only mildly extreme. Targets: 65 / 110 / 140 pips.</li>
+<li><strong>EURUSD SHORT, conviction 3, horizon 3d-5d.</strong> Daily RRG Lagging (98.254, 99.664, dy -0.221) with USD daily Leading; crowd 77.41% long (MyFxBook 85.5%), longs -321.3 pips; 4H closed below prior bar low, RSI 31.5; week -60.4 (z -0.40), down-week low on Friday 56%. Caution: 4H RRG Improving (EUR mom 102.462, pair dy +0.179), so a bounce is possible first. Targets: 40 / 70 / 90 pips.</li>
+</ol>
+<p>Not made: CADJPY short (conviction 2-3, daily Lagging + 76.59% long, but 4H engulfing and a 4H bounce), USDJPY long (conviction 2-3, Leading both but crowd only 35% long and daily mom fading). Theme concentration: ideas 2, 3, 4 are all short-AUD, ideas 1, 3, 5 are all long-USD.</p>
+<details class="raw"><summary>structured output</summary><pre>{&quot;agent&quot;: &quot;flow&quot;, &quot;candidates&quot;: [
+{&quot;symbol&quot;: &quot;USDCAD&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;conviction&quot;: 4, &quot;horizon&quot;: &quot;3d&quot;, &quot;target_distance&quot;: {&quot;1d&quot;: 40, &quot;3d&quot;: 65, &quot;5d&quot;: 85}, &quot;reason&quot;: &quot;Retail 18.9% long with shorts -208 pips under water, daily RRG Leading, week +67.8 pips z +0.49; 4H RRG cooling so buy dips&quot;},
+{&quot;symbol&quot;: &quot;AUDJPY&quot;, &quot;direction&quot;: &quot;SHORT&quot;, &quot;conviction&quot;: 4, &quot;horizon&quot;: &quot;3d&quot;, &quot;target_distance&quot;: {&quot;1d&quot;: 45, &quot;3d&quot;: 80, &quot;5d&quot;: 100}, &quot;reason&quot;: &quot;Daily RRG Lagging, JPY Leading vs AUD weakest (1W +1.303 vs -1.304), 4H bounce fading, retail 69.4% long with longs -315.6 pips&quot;},
+{&quot;symbol&quot;: &quot;AUDUSD&quot;, &quot;direction&quot;: &quot;SHORT&quot;, &quot;conviction&quot;: 3, &quot;horizon&quot;: &quot;3d&quot;, &quot;target_distance&quot;: {&quot;1d&quot;: 35, &quot;3d&quot;: 60, &quot;5d&quot;: 80}, &quot;reason&quot;: &quot;RRG Lagging on 4H and Daily, retail 69.67% long with longs -182 pips; RSI 23.1 so enter on bounces&quot;},
+{&quot;symbol&quot;: &quot;EURAUD&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;conviction&quot;: 3, &quot;horizon&quot;: &quot;3d&quot;, &quot;target_distance&quot;: {&quot;1d&quot;: 65, &quot;3d&quot;: 110, &quot;5d&quot;: 140}, &quot;reason&quot;: &quot;RRG Leading on 4H and Daily, retail 33.6% long with shorts -285 pips, week +122 pips z +0.52&quot;},
+{&quot;symbol&quot;: &quot;EURUSD&quot;, &quot;direction&quot;: &quot;SHORT&quot;, &quot;conviction&quot;: 3, &quot;horizon&quot;: &quot;3d&quot;, &quot;target_distance&quot;: {&quot;1d&quot;: 40, &quot;3d&quot;: 70, &quot;5d&quot;: 90}, &quot;reason&quot;: &quot;Daily RRG Lagging vs USD Leading, retail 77.4% long with longs -321 pips, down-week low usually Friday (56%); 4H RRG Improving is the risk&quot;}
+], &quot;stretched&quot;: [&quot;US30 (week z -1.59)&quot;, &quot;AUDNZD (today z -1.11)&quot;, &quot;US500 (week z -1.05)&quot;]}</pre></details><div class="round">Round 2 - debate</div><h3>Agent 3 (Flow) - Round 2 - 4H close Thu 19 Nov 2026 13:00 BKK</h3>
+<h4>1. Where I agree</h4>
+<ul>
+<li><strong>Macro on USDCAD LONG.</strong> Macro&#x27;s 2y spread widening (+33.8bp 13w) matches my daily RRG Leading (101.653, 101.102) and a crowd only 18.9% long (MyFxBook 8.08%) with shorts -208.5 pips under water. Tech flags RSI 72.2 and a shooting star, which is the same dip-buy caution I wrote; week z is only +0.49, so there is room. Three lenses plus sentiment agree.</li>
+<li><strong>Tech on GBPUSD SHORT.</strong> GBP is Lagging on 4H (98.288, 97.852, dy -0.915) and Weakening on Daily (mom 98.606, dy -0.72) while USD is Leading daily (102.027). Tech&#x27;s plan to sell the bounce fits RSI 27.</li>
+<li><strong>Tech and Macro on short AUD.</strong> AUD is the weakest currency on both RRG timeframes (Daily 1W -1.304). Macro&#x27;s jobs miss (-43.5K vs +25K) adds the fundamental reason. Best expression is long EURAUD (Tech: breakout above the 20-bar high; Macro: EURAUD spread +20.1bp 4w; mine: Leading on both TFs, crowd 33.6% long with shorts -285 pips).</li>
+<li><strong>Tech on US30 bounce.</strong> US30 is my only stretched symbol (week -3.7%, z -1.59), so a 1d bounce is statistically reasonable.</li>
+</ul>
+<h4>2. Where I disagree</h4>
+<ul>
+<li><strong>COT on the JPY-crosses longs (NZDJPY, EURJPY, AUDJPY, AUDCHF).</strong> JPY is Leading on the Daily RRG (RS 101.235, 1W +1.303) and the crowd is already 82.32% long NZDJPY and 71.44% long AUDCHF, so the retail side is crowded the wrong way. COT itself says JPY longs and AUD shorts are still building (+20,792 and -22,296). That is early contrarian, a multi-week idea, not 3-5 days.</li>
+<li><strong>COT on EURUSD LONG.</strong> Daily RRG Lagging (98.254, 99.664) and 77.41% of retail long with longs -321 pips. Only the 4H bounce supports it.</li>
+<li><strong>Macro on AUDNZD / GBPNZD shorts.</strong> The 4H RRG agrees, but the crowd is only 32.25% and 31.3% long, so there is no contrarian fuel. AUDNZD fell -55.6 pips today (z -1.11) at RSI 28.3.</li>
+<li><strong>Macro and Tech on EURGBP LONG.</strong> The crowd is 84.55% long, the most crowded pair on the board, against RRG.</li>
+</ul>
+<h4>3. What changed my mind</h4>
+<ul>
+<li>COT&#x27;s warning that AUD NC %K52 is 0 with CM %K52 99, and Tech&#x27;s avoid list on AUDUSD (RSI 23.1, 4H hammer): I cut AUDUSD SHORT from 3 to 2 and AUDJPY SHORT from 4 to 3.</li>
+<li>COT&#x27;s EUR short-covering (+21,395) and EUR 4H momentum 102.462 lower EURUSD SHORT to conviction 2. Macro&#x27;s AUD CPI on Wed 25 Nov 07:30 caps AUD shorts at 3d, and I would close before it.</li>
+<li>Macro&#x27;s Fri 14:00 GBP Retail Sales is event risk for GBPUSD and EURAUD-type cross exposure (GBP legs), so I prefer to keep EURAUD sized small.</li>
+</ul>
+<h4>4. My final ranking</h4>
+<ol>
+<li>USDCAD LONG, 3d, conviction 4 (buy dips; Fri 20:30 CAD Retail Sales is the risk).</li>
+<li>EURAUD LONG, 3d, conviction 3.</li>
+<li>AUDJPY SHORT, 3d, conviction 3 (enter on a bounce; Fri 06:30 JPY CPI is the risk).</li>
+</ol>
+<details class="raw"><summary>structured output</summary><pre>{&quot;agent&quot;: &quot;flow&quot;, &quot;final_top3&quot;: [{&quot;symbol&quot;: &quot;USDCAD&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;horizon&quot;: &quot;3d&quot;, &quot;conviction&quot;: 4}, {&quot;symbol&quot;: &quot;EURAUD&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;horizon&quot;: &quot;3d&quot;, &quot;conviction&quot;: 3}, {&quot;symbol&quot;: &quot;AUDJPY&quot;, &quot;direction&quot;: &quot;SHORT&quot;, &quot;horizon&quot;: &quot;3d&quot;, &quot;conviction&quot;: 3}], &quot;votes&quot;: {&quot;GBPUSD SHORT&quot;: &quot;for&quot;, &quot;EURUSD SHORT&quot;: &quot;neutral&quot;, &quot;US500 LONG&quot;: &quot;neutral&quot;, &quot;GBPAUD LONG&quot;: &quot;neutral&quot;, &quot;USDCHF LONG&quot;: &quot;neutral&quot;, &quot;US30 LONG&quot;: &quot;for&quot;, &quot;EURJPY LONG&quot;: &quot;against&quot;, &quot;NZDJPY LONG&quot;: &quot;against&quot;, &quot;AUDJPY LONG&quot;: &quot;against&quot;, &quot;EURUSD LONG&quot;: &quot;against&quot;, &quot;AUDCHF LONG&quot;: &quot;against&quot;, &quot;AUDNZD SHORT&quot;: &quot;neutral&quot;, &quot;GBPNZD SHORT&quot;: &quot;neutral&quot;, &quot;AUDCAD SHORT&quot;: &quot;for&quot;, &quot;USDCAD LONG&quot;: &quot;for&quot;, &quot;EURGBP LONG&quot;: &quot;against&quot;, &quot;AUDJPY SHORT&quot;: &quot;for&quot;, &quot;AUDUSD SHORT&quot;: &quot;neutral&quot;, &quot;EURAUD LONG&quot;: &quot;for&quot;}}</pre></details></div><div class="pane" id="p4" hidden><p class="small">Macro analyst - economic calendar, surprises, 2y yields &amp; carry</p><div class="round">Round 1 - analysis</div><h3>Agent 4 (Macro) - Round 1, 4H close Thu 19 Nov 2026 13:00 Bangkok</h3>
+<p>No web searches used; the brief covers the question. Horizons: 1d = through Fri 20 Nov, 3d = through Tue 24 Nov, 5d = through Wed 25 Nov (AUD CPI lands Wed 07:30 BKK).</p>
+<h4>1. Macro regime</h4>
+<ul>
+<li>Rates: USD 2y 4.817% is up +62.7bp over 13w and +16.9bp over 4w, but -6.7bp over 1w. GBP 4.915% leads (13w +53.2bp, 1w -6.9bp), AUD 4.831% is rank 2. The bottom of the table is JPY 1.863% and CHF 0.298%. Front-end yields fell across the top-3 this week, so carry leaders are cooling, not breaking.</li>
+<li>Risk tone: VIX 25.46 vs median 17.09 (flagged &quot;high&quot;, as of 2026-11-17, so slightly stale). Equity technicals are washed out: UK100 RSI 24.7 / Stoch 4.5, GER40 RSI 28.1 / Stoch 8.2, EU50 RSI 28.3, US30 RSI 29.3, HK50 RSI 19.4 with a 20-bar-low breakdown. Risk-off but heavily oversold.</li>
+<li>AUD: the 1w spread narrowing is the clearest rate move. Oct jobs were weak (see below) while AUD 2y is still rank 2, so there is room for AUD 2y to keep falling toward the data. AUDNZD spread 0.891% is -10.8bp 1w and -11.5bp 4w; NZD 2y is +3.5bp 1w while AUD is -7.3bp.</li>
+<li>GBP: UK Oct CPI came in exactly on forecast (headline 3.6% YoY, core 2.8%), no hawkish or dovish surprise. GBP 2y still fell 6.9bp over 1w. GBP spreads are narrowing against NZD (-10.4bp 1w), AUD flat, CHF -10.6bp.</li>
+<li>EUR/JPY/CHF: EUR 2y 3.142% (4w +13.9bp) is catching up slightly, so EUR spreads are widening in its favour vs GBP (EURGBP +5.7bp 1w, +9.7bp 4w) and vs AUD (EURAUD +6.0bp 1w, +20.1bp 4w). JPY 2y is only 1.863%, yet USDJPY 2y spread is +20.6bp over 4w, which is consistent with price at 159.547.</li>
+</ul>
+<h4>2. What the data just said (last 36h)</h4>
+<ul>
+<li>AUD (Thu 07:30 BKK, med flag but the key print): Employment Change -43.5K vs +25K forecast (surprise -68.5K, prior -36.4K), unemployment 4.9% vs 4.7% forecast, full-time jobs -2.9K. Clear AUD-negative. Price absorbed part of it: AUDUSD is already -4.59% over 4w (z -2.17), RSI 23.1, bullish hammer. AUDJPY 4w -3.84% (z -1.78), AUDCAD 4w -2.63% (z -1.87).</li>
+<li>JPY (Wed 06:50 BKK, HIGH): Trade balance -476.5B vs -956B forecast, a much smaller deficit (+479.5B surprise); exports YoY 20.5% vs 20%. Mildly JPY-supportive, but Thu machinery orders were mixed (MoM -0.3% vs -0.5%, YoY 13.4% vs 13.7%). Small effect.</li>
+<li>GBP: CPI in line on every line, zero surprise on headline and core. Neutral.</li>
+<li>USD housing: starts beat (1.309M vs 1.245M) but permits missed (1.295M vs 1.377M); pending home sales -4.7% vs -2%. Mixed to soft. 20Y auction: bid-to-cover 2.63 vs 2.73 prior, 70.87% allotted at high (prev 60.05%), a soft-ish auction. EIA crude +3.38M vs -0.477M forecast and gasoline +5.192M vs +1.7M forecast, bearish oil, not directly in the universe.</li>
+<li>NZD: trade balance -2.77B NZD vs -2.12B prior, wider deficit, mild negative but NZD 2y is rising.</li>
+</ul>
+<h4>3. Event risk map (Bangkok time)</h4>
+<ul>
+<li>Next 1 trading day (through Fri 20 Nov):</li>
+<li class="sub">Thu 20:30 USD Initial Jobless Claims (fcst 197K, prev 200K) and Philly Fed (fcst 20, prev 20.9): medium, hits USD pairs and US indices.</li>
+<li class="sub">Fri 06:30 JPY [HIGH] CPI Inflation YoY (core fcst 2.3% vs 2.1% prev): hits JPY crosses, JP225.</li>
+<li class="sub">Fri 08:00 CNY Loan Prime Rate (prev 5Y 3.5%, 1Y 3.0%): hits HK50, CN50.</li>
+<li class="sub">Fri 14:00 GBP [HIGH] Retail Sales MoM (fcst 0.0%, prev -0.4%): hits all GBP pairs, UK100.</li>
+<li class="sub">Fri 20:30 CAD Retail Sales MoM (fcst 0.7%, prev 1.2%): hits CAD pairs.</li>
+<li>Through 3 trading days (adds Mon 23 / Tue 24 Nov):</li>
+<li class="sub">Mon 15:30 EUR [HIGH] Manufacturing PMI flash; Mon 16:30 GBP [HIGH] Manufacturing and Services PMI flash (no forecast in brief).</li>
+<li class="sub">Mon 21:45 USD S&amp;P Global PMIs flash (med); Tue 16:00 EUR [HIGH] Ifo Business Climate (prev 90.2): hits EUR pairs, GER40, EU50.</li>
+<li class="sub">Tue 22:00 USD CB Consumer Confidence (fcst 92, prev 91.7); Tue 07:30 JPY PMI flash.</li>
+<li>Through 5 trading days (adds Wed 25 Nov):</li>
+<li class="sub">Wed 07:30 AUD Inflation Rate MoM/YoY and RBA Trimmed Mean CPI (Oct; prior YoY 4.3%, trimmed mean 3.6%, MoM 0.8% / 0.3%). Marked medium in the brief but it is the key AUD catalyst and can reverse an AUD-short.</li>
+<li class="sub">No Fed, ECB, BoE, RBA, BoJ decision and no NFP inside the window per the brief.</li>
+</ul>
+<h4>4. Macro trade ideas (strongest first)</h4>
+<ol>
+<li><strong>AUDNZD SHORT, conviction 3, horizon 5d.</strong> Evidence: AUD jobs miss (-43.5K vs +25K, unemployment 4.9% vs 4.7%); spread 0.891% is falling (-10.8bp 1w, -11.5bp 4w, -10.0bp 13w) while NZD 2y +3.5bp 1w; daily trend mixed, price &lt; SMA20 &lt; SMA200 at 1.21678. Against: RSI 28.3, Stoch 11.8 and a bullish doji/hammer, so a 1-day bounce is likely; hence 3-5d not 1d. Break/make: Wed 25 Nov 07:30 AUD CPI (prev 4.3% YoY).</li>
+<li><strong>GBPNZD SHORT, conviction 3, horizon 3d.</strong> Evidence: price is +1.91% over 4w (z +1.33) while the 2y spread is -10.4bp 1w and flat -1.0bp 4w, so price has run ahead of rates; bearish engulfing, closed below prior low, MACD hist -13.6, Stoch 11.5 at 2.38949. Against: daily trend up, GBP still rank-1 yield. Break/make: Fri 14:00 GBP Retail Sales [HIGH] (fcst 0.0%), Mon 16:30 GBP PMIs [HIGH].</li>
+<li><strong>AUDCAD SHORT, conviction 2, horizon 3d-5d.</strong> Evidence: spread 1.519% down -14.0bp 4w and -4.7bp 13w (the only 13w-negative spread among the AUD crosses besides AUDNZD), AUD jobs miss, daily trend down, price &lt; SMA20 &lt; SMA200 at 0.95891. Against: RSI 28.8, Stoch 15.9 (oversold; shorting after z -1.87 already). Break/make: Fri 20:30 CAD Retail Sales (fcst 0.7%), Wed AUD CPI.</li>
+<li><strong>USDCAD LONG, conviction 2, horizon 3d.</strong> Evidence: 2y spread 1.505% widening (+9.2bp 4w, +33.8bp 13w), daily trend up, price &gt; SMA20 &gt; SMA200 at 1.43381. Against: RSI 72.2, Stoch 84.5, shooting-star candle, 1w spread -3.3bp, so a pullback is likely first. Break/make: Thu 20:30 USD jobless claims/Philly Fed, Fri 20:30 CAD Retail Sales.</li>
+<li><strong>EURGBP LONG, conviction 2, horizon 3d.</strong> Evidence: spread -1.773% but narrowing in EUR&#x27;s favour (+5.7bp 1w, +9.7bp 4w), GBP 2y -6.9bp 1w, price 0.83484 above SMA20. Against: daily trend down, shooting star with Stoch 92.2 and price still below SMA200, so entry timing is poor. Break/make: Fri 14:00 GBP Retail Sales [HIGH], Mon PMIs.</li>
+</ol>
+<p>No-trade notes: AUDUSD has the biggest stretch (4w -4.59%, z -2.17, RSI 23.1, hammer) but the 2y spread is flat at +0.014%, so no macro edge for a short after the move. USDJPY at 159.547 has a widening spread (+20.6bp 4w) but JPY CPI [HIGH] lands Fri 06:30; I have no intervention data in the brief, so I stay out. Indices: the brief gives no macro catalyst that explains the oversold readings, so no macro index idea; the one-day bounce risk after UK100/GER40/EU50 readings is technical territory.</p>
+<details class="raw"><summary>structured output</summary><pre>{&quot;agent&quot;: &quot;macro&quot;, &quot;candidates&quot;: [
+{&quot;symbol&quot;: &quot;AUDNZD&quot;, &quot;direction&quot;: &quot;SHORT&quot;, &quot;conviction&quot;: 3, &quot;horizon&quot;: &quot;5d&quot;, &quot;reason&quot;: &quot;AUD jobs -43.5K vs +25K, 2y spread falling (-10.8bp 1w, -11.5bp 4w) while NZD 2y rises&quot;, &quot;event_risk&quot;: &quot;AUD CPI/trimmed mean Wed 25 Nov 07:30&quot;},
+{&quot;symbol&quot;: &quot;GBPNZD&quot;, &quot;direction&quot;: &quot;SHORT&quot;, &quot;conviction&quot;: 3, &quot;horizon&quot;: &quot;3d&quot;, &quot;reason&quot;: &quot;price +1.91% 4w ahead of a spread down 10.4bp 1w; bearish engulfing, MACD hist -13.6&quot;, &quot;event_risk&quot;: &quot;GBP Retail Sales Fri 14:00, GBP PMIs Mon 16:30&quot;},
+{&quot;symbol&quot;: &quot;AUDCAD&quot;, &quot;direction&quot;: &quot;SHORT&quot;, &quot;conviction&quot;: 2, &quot;horizon&quot;: &quot;3d&quot;, &quot;reason&quot;: &quot;spread -14.0bp 4w, AUD jobs miss, daily trend down, but RSI 28.8 oversold&quot;, &quot;event_risk&quot;: &quot;CAD Retail Sales Fri 20:30; AUD CPI Wed 07:30&quot;},
+{&quot;symbol&quot;: &quot;USDCAD&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;conviction&quot;: 2, &quot;horizon&quot;: &quot;3d&quot;, &quot;reason&quot;: &quot;spread widening +33.8bp 13w, daily uptrend, but RSI 72.2 stretched&quot;, &quot;event_risk&quot;: &quot;US jobless claims Thu 20:30; CAD Retail Sales Fri 20:30&quot;},
+{&quot;symbol&quot;: &quot;EURGBP&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;conviction&quot;: 2, &quot;horizon&quot;: &quot;3d&quot;, &quot;reason&quot;: &quot;spread narrowing in EUR favour (+9.7bp 4w), GBP 2y -6.9bp 1w; poor technical timing&quot;, &quot;event_risk&quot;: &quot;GBP Retail Sales Fri 14:00 (HIGH)&quot;}
+],
+&quot;high_impact_next_5d&quot;: [&quot;Fri 06:30 JPY Inflation Rate YoY&quot;, &quot;Fri 14:00 GBP Retail Sales MoM&quot;, &quot;Mon 15:30 EUR Manufacturing PMI Flash&quot;, &quot;Mon 16:30 GBP Manufacturing PMI Flash&quot;, &quot;Mon 16:30 GBP Services PMI Flash&quot;, &quot;Tue 16:00 EUR Ifo Business Climate&quot;, &quot;Wed 07:30 AUD CPI (med in brief, key AUD catalyst)&quot;]}</pre></details><div class="round">Round 2 - debate</div><h3>Agent 4 (Macro) - Round 2</h3>
+<h4>Where I agree</h4>
+<ul>
+<li><strong>Flow, EURAUD LONG (and Tech, GBPAUD LONG):</strong> the rates data backs the AUD-short theme. AUD jobs printed -43.5K vs +25K forecast, unemployment 4.9% vs 4.7%, yet AUD 2y (4.831%) is still rank 2, so there is room for it to fall. EURAUD 2y spread is +6.0bp 1w and +20.1bp 4w in EUR&#x27;s favour. Both ideas are fine, but EURAUD is cleaner than GBPAUD, because GBP 2y fell 6.9bp this week.</li>
+<li><strong>Flow, USDCAD LONG:</strong> my own idea 4. The 2y spread is 1.505%, +9.2bp 4w and +33.8bp 13w. Flow&#x27;s 18.9% retail long and shorts -208 pips underwater add to it. I keep the dip-buy: RSI 72.2 and the shooting star argue against chasing.</li>
+<li><strong>Flow and Tech, AUDUSD SHORT:</strong> AUD is the right leg to short. The AUDUSD 2y spread is flat (+0.014%), though, so macro adds little to the pair. I stay neutral.</li>
+<li><strong>COT, AUD extreme short:</strong> this supports caution on every AUD short. I keep my AUDNZD conviction at 3, not 4.</li>
+</ul>
+<h4>Where I disagree</h4>
+<ul>
+<li><strong>COT, EURJPY / NZDJPY / AUDJPY / AUDCHF longs:</strong> the JPY and CHF extremes are real, but I have a macro objection. VIX is 25.46 against a 17.09 median, and the equity indices are in a risk-off wash. That tape feeds JPY and CHF, so fading them early is dangerous. JPY CPI lands Fri 06:30 [HIGH] (core fcst 2.3% vs 2.1% prior), and a hot print adds JPY support inside any 1d hold. A 5d trade can also go through the AUD CPI on Wed.</li>
+<li><strong>COT, EURUSD LONG:</strong> USD is not fading on rates. USD 2y is +62.7bp over 13w. EUR 2y is only catching up slowly (+13.9bp 4w). I disagree with the long.</li>
+<li><strong>Tech, US500 / US30 LONG:</strong> I have no macro catalyst for a bounce. VIX is rising, the 20Y auction was soft (bid-to-cover 2.63 vs 2.73), and pending home sales were -4.7% vs -2%. I stay neutral. These are technical bounces only.</li>
+<li><strong>Tech, USDCHF LONG:</strong> CHF 2y of 0.298% is the lowest on the table and USD yields are high, so the direction is right. But it is chasing at Stoch 87, and the risk-off tone supports CHF. I stay neutral.</li>
+<li><strong>Flow, AUDJPY SHORT, conviction 4:</strong> the AUD leg is right. JPY CPI Fri 06:30 [HIGH] could squeeze the pair either way, and AUD CPI Wed is the reversal risk. Conviction 4 is too high; I would say 3.</li>
+</ul>
+<h4>What changed my mind</h4>
+<ul>
+<li>Flow&#x27;s data shows GBPNZD and AUDNZD crowd shorts, and the sentiment is thin. I cut GBPNZD SHORT from 3 to 2, because Fri 14:00 GBP Retail Sales and Mon 16:30 GBP PMIs, both [HIGH], make the 3d hold close to a coin-flip.</li>
+<li>Tech&#x27;s avoid note on AUD crosses (RSI 28-31) matches my own caveat. AUDCAD SHORT drops out of my ranking.</li>
+<li>The COT point that EUR shorts are being covered (+21,395 NC net) makes me drop EURGBP LONG. The EUR leg may be fine, but the GBP leg is mixed.</li>
+</ul>
+<h4>My final ranking</h4>
+<ol>
+<li><strong>AUDNZD SHORT, 5d, conviction 3.</strong> The spread is -10.8bp 1w and -11.5bp 4w. NZD 2y is +3.5bp 1w while AUD is -7.3bp. Flow&#x27;s RRG shows both timeframes Lagging. The risk is the Wed 07:30 AUD CPI (prior 4.3% YoY).</li>
+<li><strong>EURAUD LONG, 3d, conviction 3.</strong> Spread +20.1bp 4w, AUD jobs miss, Flow&#x27;s RRG is Leading on both timeframes. The risks are Mon 15:30 EUR PMI and Tue 16:00 Ifo.</li>
+<li><strong>USDCAD LONG, 3d, conviction 3.</strong> Spread +33.8bp 13w, retail crowd at 18.9% long. The risks are Thu 20:30 US claims and Fri 20:30 CAD Retail Sales (fcst 0.7%, prev 1.2%). Buy dips.</li>
+</ol>
+<details class="raw"><summary>structured output</summary><pre>{&quot;agent&quot;: &quot;macro&quot;, &quot;final_top3&quot;: [
+{&quot;symbol&quot;: &quot;AUDNZD&quot;, &quot;direction&quot;: &quot;SHORT&quot;, &quot;horizon&quot;: &quot;5d&quot;, &quot;conviction&quot;: 3},
+{&quot;symbol&quot;: &quot;EURAUD&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;horizon&quot;: &quot;3d&quot;, &quot;conviction&quot;: 3},
+{&quot;symbol&quot;: &quot;USDCAD&quot;, &quot;direction&quot;: &quot;LONG&quot;, &quot;horizon&quot;: &quot;3d&quot;, &quot;conviction&quot;: 3}
+],
+&quot;votes&quot;: {
+&quot;GBPUSD SHORT&quot;: &quot;neutral&quot;,
+&quot;EURUSD SHORT&quot;: &quot;neutral&quot;,
+&quot;US500 LONG&quot;: &quot;neutral&quot;,
+&quot;GBPAUD LONG&quot;: &quot;for&quot;,
+&quot;USDCHF LONG&quot;: &quot;neutral&quot;,
+&quot;US30 LONG&quot;: &quot;neutral&quot;,
+&quot;EURJPY LONG&quot;: &quot;against&quot;,
+&quot;NZDJPY LONG&quot;: &quot;against&quot;,
+&quot;AUDJPY LONG&quot;: &quot;against&quot;,
+&quot;EURUSD LONG&quot;: &quot;against&quot;,
+&quot;AUDCHF LONG&quot;: &quot;against&quot;,
+&quot;USDCAD LONG&quot;: &quot;for&quot;,
+&quot;AUDJPY SHORT&quot;: &quot;for&quot;,
+&quot;AUDUSD SHORT&quot;: &quot;neutral&quot;,
+&quot;EURAUD LONG&quot;: &quot;for&quot;,
+&quot;AUDNZD SHORT&quot;: &quot;for&quot;,
+&quot;GBPNZD SHORT&quot;: &quot;neutral&quot;,
+&quot;AUDCAD SHORT&quot;: &quot;neutral&quot;,
+&quot;EURGBP LONG&quot;: &quot;neutral&quot;
+}}</pre></details></div></div></section>
+
+<section><h3>Earlier calls</h3><p class="small"><a href="2026-11-19_0900.html">Thu 19 Nov 2026 09:00</a> · <a href="2026-11-18_2100.html">Wed 18 Nov 2026 21:00</a></p></section>
+<p class="disc">Generated automatically after every 4-hour candle close by four AI analyst agents (technical, COT positioning,
+rotation/sentiment/statistics, macro) and a moderator, from TradingView prices and the Pridi dashboards (COT, Forex RRG,
+FX Sentiment, Forex Stats, Rates &amp; Carry). Machine-generated research for discussion only - not financial advice and not a
+recommendation to trade. Levels can be wrong or stale; check the chart before acting.</p>
+</div><script>
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
+document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',String(x===b)));
+document.querySelectorAll('.pane').forEach(p=>p.hidden=p.id!==b.dataset.p);}));
+</script></body></html>
