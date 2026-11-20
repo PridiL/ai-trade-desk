@@ -1,9 +1,9 @@
 {
- "bar_close_utc": "2026-11-19 06:00",
- "run_id": "2026-11-19_1300",
- "bar_close_bkk": "Thu 19 Nov 2026 13:00 BKK",
- "headline": "Sell AUD after the jobs miss (EURAUD and GBPAUD long) and buy USDCAD on dips; avoid chasing oversold AUD and USD-major lows.",
- "market_summary": "USD is the dominant daily trend (DXY RSI 77, USD Leading on the daily RRG) but is cooling intraday, and most USD majors are oversold on 4H with bullish divergences. Risk tone is off: VIX near 25 and equity indices deeply oversold, with JPY bid against everything except USD. AUD is the weakest currency after Oct jobs printed -43.5K vs +25K, and Technical, Flow and Macro agree on expressing it through EUR and GBP crosses rather than chasing AUDUSD at RSI 23. COT warns that AUD shorts and JPY/CHF longs are already crowded, so entries are on pullbacks.",
+ "bar_close_utc": "2026-11-19 22:00",
+ "run_id": "2026-11-20_0500",
+ "bar_close_bkk": "Fri 20 Nov 2026 05:00 BKK",
+ "headline": "AUD is the desk's weak link: buy EURAUD on a dip, sell AUDJPY, and diversify with a USDCAD dip-buy.",
+ "market_summary": "Risk-off tape: US and European indices broke 20-bar lows with 4H RSI near 17-26 and VIX well above its median, after a weak Philly Fed (6.3 vs 20). USD and JPY are the strongest currencies while AUD is the weakest on every window after a -43.5K jobs miss that cut AUD 2y yields by 21.6 bp on the week. All four lenses agree on AUD weakness; the debate was over how to express it without chasing stretched pairs like AUDUSD (RSI 24.7). Indices are too stretched to short and lack a reversal trigger to buy.",
  "ideas": [
   {
    "rank": 1,
@@ -11,18 +11,18 @@
    "direction": "LONG",
    "conviction": 4,
    "best_horizon": "3d",
-   "entry_type": "market",
-   "entry": 1.63946,
-   "stop": 1.6325,
+   "entry_type": "limit",
+   "entry": 1.644,
+   "stop": 1.639,
    "targets": {
-    "1d": 1.646,
-    "3d": 1.6505,
-    "5d": 1.6535
+    "1d": 1.6515,
+    "3d": 1.656,
+    "5d": 1.661
    },
    "horizon_view": {
-    "1d": "Retest of the 1.64566 breakout high after the rejection bar; GBP/EUR events not until Mon.",
-    "3d": "Best horizon: AUD weakness and EUR spread widening (+20.1bp 4w) carry it about 0.6 sigma higher.",
-    "5d": "Still favoured, but Wed 07:30 AUD CPI can reverse AUD; trim before it."
+    "1d": "Pullback toward 1.6440 likely after RSI 72 breakout; retest of the 1.6484 week high possible.",
+    "3d": "Best horizon: Leading/Leading RRG and widening rate spread carry it through 1.6484 toward 1.6560.",
+    "5d": "Trend extension to ~1.6610 if Mon EUR PMIs and Tue Ifo do not disappoint; AUD CPI Wed is the swing risk."
    },
    "votes": {
     "technical": "for",
@@ -30,146 +30,146 @@
     "flow": "for",
     "macro": "for"
    },
-   "thesis": "EUR is improving on the 4H RRG while AUD is lagging on both timeframes after a big jobs miss. The pair broke its 20-bar high with a bullish SMA stack and a daily uptrend, and retail is only 33.6% long with shorts 285 pips under water.",
+   "thesis": "EUR has the strongest 4H momentum and AUD the weakest, and the pair just closed above its 20-bar high with price above SMA20 and SMA200. The 2y spread narrowed 25.9 bp in a week and retail is 70% short, so the move has macro and contrarian support. RSI 72 and weekly VWAP z 2.05 argue for a pullback entry rather than a market buy.",
    "evidence": [
-    "Tech: broke 20-bar high, price > SMA20 1.63321 > SMA200 1.60902, daily trend up",
-    "COT: AUD composite 0 (crowded short) vs EUR unwinding - direction fits, crowding caps it",
-    "Flow: RRG Leading on 4H and Daily, retail 33.6% long, week z +0.52",
-    "Macro: AUD jobs -43.5K vs +25K, EURAUD 2y spread +20.1bp 4w"
+    "Tech: bullish engulfing breakout above the 20-bar high, +2.45 ATR over SMA20, MACD above zero",
+    "COT: AUD Composite 0 (net -151,753, shorts still building) but EUR also an extreme-bearish flag, so spread only +6",
+    "Flow: Leading/Leading RRG on 4H and Daily, crowd 30.03% long with shorts -290 pips, week z 0.85",
+    "Macro: EUR 2y +4.3 bp vs AUD 2y -21.6 bp on 1w after AUD jobs miss"
    ],
    "risks": [
-    "Crowded AUD short (COT composite 0) can squeeze",
-    "Mon 15:30 EUR PMI flash and Tue 16:00 Ifo"
+    "Overbought 4H (RSI 72.1) - the limit may not fill",
+    "Weak euro-area PMIs/Ifo or a hot AUD CPI"
    ],
    "event_risk": [
-    "Mon 15:30 BKK EUR Manufacturing PMI flash (HIGH)",
-    "Tue 16:00 BKK EUR Ifo (HIGH)",
-    "Wed 07:30 BKK AUD CPI"
+    "Mon 15:30 BKK EUR Manufacturing PMI Flash",
+    "Tue 16:00 BKK EUR Ifo",
+    "Wed 07:30 BKK AUD CPI / RBA Trimmed Mean"
    ],
-   "invalidation": "4H close below 1.6325 (back under SMA20 / weekly VWAP)"
+   "invalidation": "4H close below 1.6390"
   },
   {
    "rank": 2,
+   "symbol": "AUDJPY",
+   "direction": "SHORT",
+   "conviction": 3,
+   "best_horizon": "3d",
+   "entry_type": "market",
+   "entry": 106.326,
+   "stop": 107.15,
+   "targets": {
+    "1d": 105.73,
+    "3d": 105.28,
+    "5d": 104.98
+   },
+   "horizon_view": {
+    "1d": "Continuation likely into Friday: AUDJPY printed its weekly low on Friday in 50% of down weeks.",
+    "3d": "Best horizon: weakest vs strongest currency, risk-off tape and falling spread target ~105.30.",
+    "5d": "Further downside to ~105.00, but the new COT report and AUD CPI Wed raise squeeze risk."
+   },
+   "votes": {
+    "technical": "against",
+    "cot": "for",
+    "flow": "for",
+    "macro": "for"
+   },
+   "thesis": "AUD is the weakest and JPY the strongest currency on 1W, with both RRG timeframes Lagging and the AUD-JPY 2y spread down 17.2 bp on the week. Retail is 70% long and under water, and risk-off hits AUD harder than JPY. Conviction is cut to 3 because Tech flags regular bullish divergences across all JPY crosses.",
+   "evidence": [
+    "Tech: price < SMA20 < SMA200, daily trend down, but regular bullish RSI/MACD/Stoch divergences at RSI 31.9",
+    "COT: composite spread -98 (AUD 0 vs JPY 98, both still building)",
+    "Flow: Lagging/Lagging, AUD 1W -1.549 vs JPY +1.093, crowd 70.25% long with longs -359.5 pips, week z -1.11",
+    "Macro: AUD-JPY 2y spread -17.2 bp 1w, VIX elevated, equities liquidating"
+   ],
+   "risks": [
+    "Oversold snap-back across JPY crosses (bullish divergences)",
+    "Crowded JPY long - a short-covering COT report would hurt"
+   ],
+   "event_risk": [
+    "Wed 07:30 BKK AUD CPI / RBA Trimmed Mean",
+    "Fri COT release (17 Nov data)"
+   ],
+   "invalidation": "4H close above 107.150 (back over SMA20 107.103)"
+  },
+  {
+   "rank": 3,
    "symbol": "USDCAD",
    "direction": "LONG",
    "conviction": 3,
    "best_horizon": "3d",
    "entry_type": "limit",
-   "entry": 1.432,
-   "stop": 1.4283,
+   "entry": 1.4315,
+   "stop": 1.4287,
    "targets": {
-    "1d": 1.436,
+    "1d": 1.43576,
     "3d": 1.4385,
-    "5d": 1.4405
+    "5d": 1.441
    },
    "horizon_view": {
-    "1d": "Pullback toward SMA20/weekly VWAP first after the 4H shooting star; buy the dip into US claims.",
-    "3d": "Best horizon: daily uptrend and a widening 2y spread resume after the dip.",
-    "5d": "Up-trend extension toward 1.44, but Fri CAD retail sales and Mon US PMIs add noise."
-   },
-   "votes": {
-    "technical": "neutral",
-    "cot": "for",
-    "flow": "for",
-    "macro": "for"
-   },
-   "thesis": "Daily RRG Leading with a widening USD-CAD 2y spread (+33.8bp 13w) and retail only 18.9% long with shorts deep under water. The 4H is overbought with a shooting star, so the desk buys a dip to the SMA20 zone rather than chasing.",
-   "evidence": [
-    "Tech: daily uptrend, price > SMA20 1.43043 > SMA200 1.41396, but RSI 72.2 and bearish divergences",
-    "COT: USD 78 and CAD 75, no crowding on either leg",
-    "Flow: retail 18.9% long (MyFxBook 8%), shorts -208.5 pips, daily RRG Leading",
-    "Macro: 2y spread 1.505%, +9.2bp 4w, +33.8bp 13w"
-   ],
-   "risks": [
-    "4H shooting star with regular bearish RSI/MACD divergences - dip may run deeper",
-    "USD cooling intraday on the 4H RRG"
-   ],
-   "event_risk": [
-    "Thu 20:30 BKK USD Initial Jobless Claims / Philly Fed",
-    "Fri 20:30 BKK CAD Retail Sales"
-   ],
-   "invalidation": "4H close below 1.4283 (below prior day low 1.42883)"
-  },
-  {
-   "rank": 3,
-   "symbol": "GBPAUD",
-   "direction": "LONG",
-   "conviction": 3,
-   "best_horizon": "3d",
-   "entry_type": "limit",
-   "entry": 1.959,
-   "stop": 1.9485,
-   "targets": {
-    "1d": 1.967,
-    "3d": 1.971,
-    "5d": 1.974
-   },
-   "horizon_view": {
-    "1d": "Wait for the dip to SMA20/weekly VWAP; GBP retail sales Fri 14:00 is the swing factor.",
-    "3d": "Best horizon: retest of the 1.97104 breakout high on AUD weakness.",
-    "5d": "Extension possible, but GBP PMIs Mon and AUD CPI Wed make it two-way."
+    "1d": "Dip to the SMA20 near 1.4315 then a retest of the 1.43576 week high; CAD Retail Sales 20:30 tonight.",
+    "3d": "Best horizon: a break of 1.43576 opens 1.4385 with the daily trend and RRG Leading.",
+    "5d": "Extension toward 1.4410 while the retail crowd stays 82% short; USD PCE/GDP Wed is the risk."
    },
    "votes": {
     "technical": "for",
-    "cot": "for",
-    "flow": "neutral",
-    "macro": "for"
+    "cot": "neutral",
+    "flow": "for",
+    "macro": "neutral"
    },
-   "thesis": "Same AUD-weakness theme as idea 1 through a GBP leg that COT shows rebuilding (composite 76 from 45). Daily uptrend and a bullish 4H stack; the last bar rejected the breakout, so the entry is a limit at the SMA20 / weekly VWAP zone. This is the second AUD-short on the sheet; size both together as one theme.",
+   "thesis": "The cleanest non-AUD idea: a clean uptrend stack with hidden bullish divergences and a daily RRG Leading. Retail is only 17.95% long with shorts down 200 pips, the most lopsided crowd on the board. Buy the dip to SMA20 rather than the week high.",
    "evidence": [
-    "Tech: price > SMA20 1.95863 > SMA200 1.91758, daily RSI 70.7, rejection bar after 20-bar-high break",
-    "COT: GBP composite 76 rising vs AUD composite 0",
-    "Flow: retail 26.8% long, but GBP lagging on 4H RRG",
-    "Macro: AUD jobs miss; GBP 2y -6.9bp 1w is a mild drag"
+    "Tech: price > SMA20 (+1.22 ATR) > SMA200, daily RSI 72.7, hidden bullish RSI/MACD/Stoch divergences",
+    "COT: USD 78 vs CAD 75, no spread edge",
+    "Flow: crowd 17.95% long (shorts -202.8 pips), Daily RRG Leading, week z 0.5",
+    "Macro: crude stock build (+3.38M vs -0.48M) mildly CAD-negative; no rate edge"
    ],
    "risks": [
-    "Two AUD-short ideas on the sheet (EURAUD and GBPAUD) - correlated",
-    "Developing bearish divergences on 4H; GBP lagging intraday"
+    "Regular bearish Stoch divergence and MACD hist below signal",
+    "Soft US data (Philly Fed miss, USD 2y -9 bp) could cap USD"
    ],
    "event_risk": [
-    "Fri 14:00 BKK GBP Retail Sales (HIGH)",
-    "Mon 16:30 BKK GBP PMIs flash (HIGH)",
-    "Wed 07:30 BKK AUD CPI"
+    "Fri 20:30 BKK CAD Retail Sales",
+    "Fri 22:00 BKK USD Michigan Final",
+    "Wed 20:30 BKK USD Core PCE / GDP"
    ],
-   "invalidation": "4H close below 1.9485 (below 20-bar low 1.94876)"
+   "invalidation": "4H close below 1.42870"
   }
  ],
  "also_considered": [
   {
-   "symbol": "GBPUSD",
-   "direction": "SHORT",
-   "why_not": "Tech and Flow for, but RSI 27 with bullish divergences and GBP retail sales Fri; would add a second long-USD idea."
-  },
-  {
-   "symbol": "AUDJPY",
-   "direction": "SHORT",
-   "why_not": "Flow and Macro for, Tech and COT against: AUD crowded short, RSI 30.6, JPY CPI Fri 06:30."
-  },
-  {
-   "symbol": "EURJPY",
+   "symbol": "GBPAUD",
    "direction": "LONG",
-   "why_not": "COT-only multi-week contrarian idea against a daily downtrend and a risk-off tape."
+   "why_not": "COT+Macro backing, but a third AUD-short bet, inside bar with bearish divergences and UK Retail Sales/PMIs (HIGH) in the window."
   },
   {
-   "symbol": "AUDNZD",
+   "symbol": "AUDUSD",
    "direction": "SHORT",
-   "why_not": "Macro's top idea but RSI 28.3, weekly VWAP z -2.56 and AUD CPI inside 5d."
+   "why_not": "Stretched: RSI 24.7, 4w z -2.48, AUD extreme-bearish crowd - chasing."
   },
   {
-   "symbol": "EURUSD",
+   "symbol": "NZDJPY",
    "direction": "SHORT",
-   "why_not": "Split desk: COT sees EUR short covering, 4H bullish divergences; only a bounce-sell at 1.0990."
+   "why_not": "Same JPY-strength theme as AUDJPY with bullish divergences; Tech against."
+  },
+  {
+   "symbol": "NZDUSD",
+   "direction": "SHORT",
+   "why_not": "Tech pick only; sits 4 pips above the 20-bar low, COT and Macro neutral."
+  },
+  {
+   "symbol": "US30",
+   "direction": "LONG",
+   "why_not": "Oversold bounce without a reversal candle; Macro against, VIX still rising."
   }
  ],
- "dissent": "COT argues the AUD short and JPY long are both crowded extremes and favours contrarian JPY-cross longs; Technical, Flow and Macro say the risk-off tape and AUD data still favour the trend, so the desk only buys AUD-short exposure on pullbacks.",
+ "dissent": "Technical rejects AUDJPY because every JPY cross carries regular bullish divergences in a liquidation tape, while COT/Flow/Macro see a still-building trend. Two of the three ideas are AUD shorts (EURAUD long, AUDJPY short) - treat them as one AUD theme ahead of Wednesday's AUD CPI.",
  "event_risk_next_5d": [
-  "Thu 20:30 BKK USD Initial Jobless Claims / Philly Fed (MED)",
-  "Fri 06:30 BKK JPY CPI (HIGH)",
   "Fri 14:00 BKK GBP Retail Sales (HIGH)",
-  "Fri 20:30 BKK CAD Retail Sales (MED)",
-  "Mon 15:30 BKK EUR Manufacturing PMI flash (HIGH)",
-  "Mon 16:30 BKK GBP PMIs flash (HIGH)",
+  "Fri 20:30 BKK CAD Retail Sales (med)",
+  "Fri 22:00 BKK USD Michigan Final (med)",
+  "Mon 15:30 BKK EUR Manufacturing PMI Flash (HIGH)",
+  "Mon 16:30 BKK GBP Manufacturing/Services PMI Flash (HIGH)",
   "Tue 16:00 BKK EUR Ifo (HIGH)",
-  "Wed 07:30 BKK AUD CPI (MED, key AUD catalyst)"
+  "Wed 07:30 BKK AUD CPI / RBA Trimmed Mean (med)",
+  "Wed 20:30 BKK USD Core PCE, GDP 2nd est, Durable Goods (HIGH)"
  ]
 }
